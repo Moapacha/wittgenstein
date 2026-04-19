@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { registerInitCommand } from "./commands/init.js";
 import { registerImageCommand } from "./commands/image.js";
 import { registerAudioCommand } from "./commands/audio.js";
+import { registerTtsCommand } from "./commands/tts.js";
 import { registerVideoCommand } from "./commands/video.js";
 import { registerSensorCommand } from "./commands/sensor.js";
 import { registerDoctorCommand } from "./commands/doctor.js";
@@ -18,6 +19,7 @@ export function createProgram(): Command {
 
   registerInitCommand(program);
   registerImageCommand(program);
+  registerTtsCommand(program);
   registerAudioCommand(program);
   registerVideoCommand(program);
   registerSensorCommand(program);

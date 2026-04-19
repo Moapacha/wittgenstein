@@ -18,11 +18,18 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
+    "launch:check": "pnpm typecheck && pnpm --filter @wittgenstein/codec-audio test && pnpm --filter @wittgenstein/codec-sensor test",
+    "benchmark": "node --import tsx benchmarks/harness.ts",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
     "bootstrap": "tsx scripts/bootstrap.ts",
     "new-adr": "tsx scripts/new-adr.ts",
+    "train:audio-adapter": "node scripts/train-audio-ambient-adapter.mjs",
     "doctor": "pnpm --filter @wittgenstein/cli exec wittgenstein doctor",
+    "demo:audio": "pnpm --filter @wittgenstein/cli exec wittgenstein audio \"Hackathon launch voiceover with rain ambience\" --dry-run --ambient rain --out artifacts/demo/hackathon-launch.wav",
+    "demo:tts": "pnpm --filter @wittgenstein/cli exec wittgenstein tts \"Hackathon voiceover for the Wittgenstein launch\" --dry-run --ambient city --out artifacts/demo/hackathon-tts.wav",
+    "demo:sensor": "pnpm --filter @wittgenstein/cli exec wittgenstein sensor \"synthetic ecg trace for loupe dashboard\" --dry-run --out artifacts/demo/hackathon-sensor.json",
+    "smoke:cli": "pnpm --filter @wittgenstein/cli run smoke",
     "dev:site": "pnpm --filter @wittgenstein-site dev"
   },
   "devDependencies": {
