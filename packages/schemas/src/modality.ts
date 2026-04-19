@@ -6,11 +6,12 @@ export const Modality = {
   Video: "video",
   Sensor: "sensor",
   Svg: "svg",
+  Asciipng: "asciipng",
 } as const;
 
 export type Modality = (typeof Modality)[keyof typeof Modality];
 
-export const ModalitySchema = z.enum(["image", "audio", "video", "sensor", "svg"]);
+export const ModalitySchema = z.enum(["image", "audio", "video", "sensor", "svg", "asciipng"]);
 
 export const BaseRequestSchema = z.object({
   prompt: z.string().min(1),
@@ -52,11 +53,23 @@ export const SvgRequestSchema = BaseRequestSchema.extend({
 });
 export type SvgRequest = z.infer<typeof SvgRequestSchema>;
 
+export const AsciipngRequestSchema = BaseRequestSchema.extend({
+  modality: z.literal("asciipng"),
+  columns: z.number().int().min(8).max(120).default(60),
+  rows: z.number().int().min(4).max(80).default(30),
+  cell: z.number().int().min(2).max(16).default(4),
+  /** `minimax`: call Minimax text API, then post-process lines → PNG (not raw model bytes as image). */
+  source: z.enum(["local", "minimax"]).default("local"),
+  minimaxModel: z.string().optional(),
+});
+export type AsciipngRequest = z.infer<typeof AsciipngRequestSchema>;
+
 export const WittgensteinRequestSchema = z.discriminatedUnion("modality", [
   ImageRequestSchema,
   AudioRequestSchema,
   VideoRequestSchema,
   SensorRequestSchema,
   SvgRequestSchema,
+  AsciipngRequestSchema,
 ]);
 export type WittgensteinRequest = z.infer<typeof WittgensteinRequestSchema>;

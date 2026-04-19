@@ -55,6 +55,7 @@ export const WittgensteinConfigSchema = z.object({
       video: z.object({ enabled: z.boolean().default(true) }).default({}),
       sensor: z.object({ enabled: z.boolean().default(true) }).default({}),
       svg: z.object({ enabled: z.boolean().default(true) }).default({}),
+      asciipng: z.object({ enabled: z.boolean().default(true) }).default({}),
     })
     .default({}),
   svg: SvgEngineConfigSchema.default({

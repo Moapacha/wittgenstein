@@ -7,6 +7,15 @@ describe("@wittgenstein/cli", () => {
       .commands.map((command) => command.name())
       .sort();
 
-    expect(commandNames).toEqual(["audio", "doctor", "image", "init", "sensor", "svg", "video"]);
+    expect(commandNames).toEqual([
+      "asciipng",
+      "audio",
+      "doctor",
+      "image",
+      "init",
+      "sensor",
+      "svg",
+      "video",
+    ]);
   });
 });

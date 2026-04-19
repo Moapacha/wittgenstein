@@ -17,17 +17,6 @@ export const videoCodec: WittgensteinCodec<VideoRequest, VideoComposition> = {
   outputSchema: VideoCompositionSchema,
   parse: parseVideoComposition,
   async render(parsed: VideoComposition, ctx: RenderCtx): Promise<RenderResult> {
-    try {
-      return await renderWithHyperFrames(parsed, ctx);
-    } catch (error) {
-      throw createNotImplementedError("codec: video", error);
-    }
+    return await renderWithHyperFrames(parsed, ctx);
   },
 };
-
-function createNotImplementedError(scope: string, cause?: unknown): Error & { code: string } {
-  return Object.assign(new Error(`NotImplementedError(${scope})`, { cause }), {
-    name: "NotImplementedError",
-    code: "NOT_IMPLEMENTED",
-  });
-}

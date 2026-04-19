@@ -23,6 +23,8 @@
     "bootstrap": "tsx scripts/bootstrap.ts",
     "new-adr": "tsx scripts/new-adr.ts",
     "doctor": "pnpm --filter @wittgenstein/cli exec wittgenstein doctor",
+    "release:npm-cli": "pnpm --filter @wittgenstein/cli run release:npm",
+    "publish:npm-cli": "pnpm run release:npm-cli && npm publish packages/cli/npm-publish",
     "dev:site": "pnpm --filter @wittgenstein-site dev",
     "dev:presentation": "pnpm --filter @wittgenstein/presentation dev",
     "dev:wittgenstein-kimi": "pnpm --filter @wittgenstein/wittgenstein-kimi-deck dev"

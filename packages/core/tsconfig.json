@@ -5,6 +5,7 @@
   "references": [
     { "path": "../schemas" },
     { "path": "../sandbox" },
+    { "path": "../codec-asciipng" },
     { "path": "../codec-image" },
     { "path": "../codec-audio" },
     { "path": "../codec-video" },

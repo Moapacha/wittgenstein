@@ -15,6 +15,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@wittgenstein/codec-asciipng": "workspace:*",
     "@wittgenstein/codec-audio": "workspace:*",
     "@wittgenstein/codec-image": "workspace:*",
     "@wittgenstein/codec-sensor": "workspace:*",

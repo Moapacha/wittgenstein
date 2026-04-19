@@ -8,6 +8,7 @@ describe("@wittgenstein/schemas", () => {
     expect(Modality.Video).toBe("video");
     expect(Modality.Sensor).toBe("sensor");
     expect(Modality.Svg).toBe("svg");
+    expect(Modality.Asciipng).toBe("asciipng");
   });
 
   it("validates render results and manifests", () => {

@@ -11,7 +11,7 @@ The `svg` modality is the **Path A** vector track: a **small instruct model + Lo
 
 ## Training and serving
 
-See [`research/chat2svg-lora/README.md`](../../research/chat2svg-lora/README.md).
+See [`research/chat2svg-lora/README.md`](../../research/chat2svg-lora/README.md). Default training preset targets **~1 hour on one GPU** with **Qwen2.5-0.5B** (implementation-first, not SOTA).
 
 ## Notes
 

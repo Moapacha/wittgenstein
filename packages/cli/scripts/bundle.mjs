@@ -1,0 +1,22 @@
+import * as esbuild from "esbuild";
+import { chmod } from "node:fs/promises";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = dirname(fileURLToPath(import.meta.url));
+const pkgRoot = resolve(root, "..");
+const out = resolve(pkgRoot, "dist/bundle.cjs");
+
+await esbuild.build({
+  entryPoints: [resolve(pkgRoot, "src/cli-main.ts")],
+  bundle: true,
+  platform: "node",
+  target: "node20",
+  format: "cjs",
+  outfile: out,
+  banner: { js: "#!/usr/bin/env node\n" },
+  logLevel: "info",
+});
+
+await chmod(out, 0o755);
+console.log("wrote", out);
