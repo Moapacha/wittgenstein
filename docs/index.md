@@ -29,9 +29,10 @@
 
 ## Research
 
-- [`research/compression-view-of-llms.md`](research/compression-view-of-llms.md)
-- [`research/frozen-llm-multimodality.md`](research/frozen-llm-multimodality.md)
-- [`research/neural-codec-references.md`](research/neural-codec-references.md)
+- [`research/compression-view-of-llms.md`](research/compression-view-of-llms.md) — LLMs as neural compressors; why structured IR is the right LLM output surface
+- [`research/frozen-llm-multimodality.md`](research/frozen-llm-multimodality.md) — frozen backbone + adapter vs. end-to-end multimodal giants
+- [`research/neural-codec-references.md`](research/neural-codec-references.md) — annotated reference sheet: VQ-VAE → VQGAN → DALL-E 1 → LlamaGen → SEED → FSQ → TiTok
+- [`research/vq-tokens-as-interface.md`](research/vq-tokens-as-interface.md) — why discrete VQ tokens are the right LLM–decoder interface; adapter geometry; TiTok direction
 
 ## Execution
 

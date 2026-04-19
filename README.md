@@ -1,68 +1,84 @@
 # Wittgenstein
 
-Wittgenstein is a harness-first multimodal system: the LLM plans, the runtime executes, and codecs turn structured IR into real artifacts with a traceable manifest spine.
+> *Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt.*
+> — Wittgenstein, Tractatus 5.6
 
-> **Thesis:** prompts are not the contract. The contract lives in schemas, codec boundaries, renderer logic, and artifact traces.
+The limits of a language model's expression are the limits of what a harness built on top of it can plan. That is not a problem to be solved with longer context windows or better prompts. It is a structural fact: if the model can only express a scene in tokens of natural language, the downstream renderer has no more information than that. Wittgenstein's response is to extend what the model can *express as structured files* — schemas, codec IR, latent codes — rather than what it can *say in tokens*. The expressive contract lives in code, not in prompt copy.
 
 | Resource | |
 | --- | --- |
-| **Upstream** | [`github.com/Moapacha/wittgenstein`](https://github.com/Moapacha/wittgenstein) |
-| **Landing** | `pnpm dev:site` → [`apps/site`](apps/site/README.md) |
+| Upstream | `github.com/Moapacha/wittgenstein` |
+| Landing | `pnpm dev:site` → `apps/site` |
 
-## At A Glance
+## Architecture
 
-- `image` keeps a strict single path: `LLM -> JSON scene -> adapter -> frozen decoder -> PNG`
-- `tts` and `audio` share one audio codec, with local WAV rendering and optional ambient layering
-- `sensor` now uses deterministic algorithm/operator specs and can emit `JSON + CSV + loupe HTML`
-- every run leaves a manifest trail under `artifacts/runs/<run-id>/`
+Five layers. Data flows top to bottom; schema preambles reflect back up from L2 into the LLM call.
 
-## Core Position
+```
+ User prompt
+      │
+      ▼
+  L1 HARNESS          routing · retry · budget · manifest · seed
+      │
+      ▼
+  L2 IR / CODEC       LLM → structured JSON (scene spec / audio plan / signal spec)
+      │   ▲
+      │   └── schema preamble injected before LLM call
+      ▼
+  L3 RENDERER         JSON → real file
+      │               image:  frozen VQ decoder → PNG
+      │               audio:  WAV synthesis + ambient mix → WAV/M4A
+      │               sensor: operator expand → CSV + loupe HTML
+      ▼
+  L4 ADAPTER          text embedding → latent code alignment (image only; tiny MLP)
+      │               (fires between L2 and L3; no adapter for audio/sensor)
+      ▼
+  L5 DIST             CLI · npm · AGENTS.md · run manifests → artifacts/runs/<id>/
+```
 
-Wittgenstein is intentionally closest to the following research framing:
+Every run leaves a manifest under `artifacts/runs/<run-id>/`. The harness is the contract; prompts are not.
 
-- the base LLM remains primarily a **text planner**
-- modality-specific generation is pushed into a **portable codec layer**
-- the image path prefers **discrete latent / VQ-style tokens**
-- the local image stack is **adapter + frozen decoder**, not a diffusion generator
-- extra capability should come from local compute, codecs, retrieval, and tiny adapters, not extra paid token loops
+## Why VQ / Latent Tokens
 
-Put differently:
+Raw pixels are too large and too fragile as an LLM output surface. The better contract is:
 
-> multimodality is treated here less as “one giant model that knows every modality” and more as “a text-first model connected to modality-specific codecs, latent spaces, and decoders.”
+1. LLM outputs a structured scene spec (cheap, inspectable, schema-validated)
+2. A small adapter maps scene semantics to discrete latent codes
+3. A frozen decoder maps codes to pixels
 
-## Why This Repo Exists
+BPE tokens are to text what VQ tokens are to images: a finite codebook maps a continuous space to discrete indices that an autoregressive model can predict. DALL-E 1 (2021) demonstrated this bet works at scale. LlamaGen (2024) showed it works with a standard transformer architecture at competitive quality without diffusion.
 
-Most multimodal demos hide important contracts in prompts or product copy. Wittgenstein pushes those contracts into code:
+The adapter's job is narrow: translate scene semantics — what the LLM knows — into codebook indices — what the decoder expects. It does not learn image generation from scratch. That narrowness is intentional and is why the adapter can be tiny.
 
-- schemas define the boundary
-- codecs define modality-specific IR
-- renderers or decoders produce artifacts
-- the harness records what happened
+## Decoder vs. Generator
 
-That makes the repo much easier to debug, benchmark, and ship during a hackathon.
+A diffusion model is a generator: it samples from a learned distribution on every run, is stochastic, compute-expensive, and produces results that vary with noise seed and sampler parameters. Inspecting why it produced a given image requires probing latent noise trajectories.
 
-It also keeps the repo aligned with a very specific thesis:
+A frozen VQ decoder is deterministic: given the same token sequence it produces the same pixels, analogous to a lookup table compressed into weights. Reproducibility is not a policy choice layered on top — it follows structurally from the architecture. This is why the repo favors decoder families such as LlamaGen, SEED, and dVAE-style bridges over diffusion generators as the local image path.
 
-- tokens can be a usable cross-modal interface
-- vector-quantized or otherwise discrete latents are a plausible bridge between text planning and raster decoding
-- a **decoder is not the same thing as a generator**
-- the most valuable trainable component is often the small adapter in the middle, not the whole model stack
+## What Ships
 
-## What Works Right Now
-
-| Path | Current state | Output |
+| Path | State | Output |
 | --- | --- | --- |
-| Image | Main harness path is wired; local adapter work is documented in `python/image_adapter` | PNG |
-| TTS | CLI alias over the audio speech route | WAV |
-| Audio | Speech, soundscape, and music all render locally | WAV |
-| Sensor | Deterministic operator spec expands to samples and a `loupe` dashboard | JSON, CSV, HTML |
-| Video | Composition IR scaffold only; MP4 branch still needs to be merged | Pending |
+| Image | Harness wired; MLP adapter trained on COCO | PNG |
+| TTS | CLI alias over audio speech route | WAV |
+| Audio | Speech, soundscape, music render locally | WAV |
+| Sensor | Deterministic operator spec → samples + dashboard | JSON, CSV, HTML |
+| Video | Composition IR scaffold; MP4 branch pending | Pending |
+| Image style adapter | 781 COCO examples, 9 s CPU train, val BCE 0.7698 | MLP weights |
+| Audio ambient classifier | 369 examples, <5 s, keyword + MLP hybrid | MLP weights |
 
-For image specifically, the intended end-state is:
+The adapter training numbers are not projections. They demonstrate that "tiny adapter" is a real implementation constraint, not a framing convenience.
 
-`LLM scene spec -> small scene-to-latent adapter -> VQ/discrete image tokens -> frozen decoder -> PNG`
+## polyglot-mini
 
-That is already the architecture the repo is converging toward, even if the current implementation still uses a placeholder adapter/decoder bridge in places.
+`polyglot-mini` is the Python rapid-prototype surface. It demonstrates the five-layer thesis end-to-end without requiring the TypeScript monorepo to be running. Use it to:
+
+- validate codec IR schemas against live LLM output
+- run the image adapter and frozen decoder pipeline locally
+- prototype new modality codecs before porting to the TS packages
+
+It is intentionally minimal. The TS monorepo remains the production harness; `polyglot-mini` is the proving ground.
 
 ## Fast Start
 
@@ -83,7 +99,7 @@ pnpm launch:check
 pnpm benchmark
 ```
 
-Demo artifacts land in `artifacts/demo/`.
+Artifacts land in `artifacts/demo/`.
 
 ## CLI Surface
 
@@ -99,51 +115,23 @@ wittgenstein doctor
 
 ## Benchmarks
 
-The repo now includes a lightweight benchmark harness that reports:
+The harness reports cost, latency, and modality-specific smoke metrics per run. Longer-term standard targets:
 
-- **Cost** (API spend where applicable)
-- **Latency**
-- **Quality** (modality-specific smoke metrics)
+- `image`: FID and CLIPScore
+- `tts/audio`: MOS and ASR-based WER/PER
+- `sensor`: discriminative score and predictive score
+- `video`: FVD and Video-Bench once the MP4 branch lands
 
-The current harness is intentionally a **smoke benchmark** for quick iteration. The longer-term standard-metric plan is documented separately:
-
-- [`benchmarks/README.md`](benchmarks/README.md)
-- [`docs/benchmark-standards.md`](docs/benchmark-standards.md)
-
-Current common-metric targets:
-
-- `image`: `FID` and `CLIPScore`
-- `tts/audio`: `MOS` and ASR-based intelligibility such as `WER` or `PER`
-- `sensor`: common synthetic time-series measures such as `discriminative score` and `predictive score`
-- `video`: `FVD` and `Video-Bench` style evaluation once the MP4 branch is merged
-
-## Why VQ / Latent Tokens
-
-The repo is increasingly standardized around a simple claim:
-
-- raw pixels are too expensive and too fragile as an LLM output surface
-- structured scene specs are cheap and controllable
-- discrete latent codes are a better bridge from text semantics to raster files than direct pixel emission
-
-This is why the image branch favors:
-
-- scene JSON as the LLM contract
-- optional `providerLatents`
-- small adapter bundles
-- frozen decoder families such as `llamagen`, `seed`, or `dvae`-style bridges
-
-The practical benefit is that we can keep the model-side API mostly text-only while moving modality-specific work into a portability layer.
+See `benchmarks/README.md` and `docs/benchmark-standards.md`.
 
 ## Key Docs
 
-- [`AGENTS.md`](AGENTS.md) — short working rules and repo map
-- [`docs/architecture.md`](docs/architecture.md) — the five-layer system
-- [`docs/codecs/image.md`](docs/codecs/image.md) — the image path, discrete latents, and decoder posture
-- [`docs/codec-protocol.md`](docs/codec-protocol.md) — codec contract
-- [`docs/reproducibility.md`](docs/reproducibility.md) — manifest spine and seed rules
-- [`docs/modality-launch-surface.md`](docs/modality-launch-surface.md) — lightweight contract for image, tts, audio, and sensor
-- [`docs/hackathon-launch.md`](docs/hackathon-launch.md) — launch checklist and engineering priorities
-- [`packages/cli/README.md`](packages/cli/README.md) — npm-facing CLI usage
+- `AGENTS.md` — working rules and repo map
+- `docs/architecture.md` — five-layer system detail
+- `docs/codecs/image.md` — image path, discrete latents, decoder posture
+- `docs/codec-protocol.md` — codec contract
+- `docs/reproducibility.md` — manifest spine and seed rules
+- `packages/cli/README.md` — npm-facing CLI usage
 
 ## Workspace Layout
 
@@ -152,20 +140,18 @@ The practical benefit is that we can keep the model-side API mostly text-only wh
 - `packages/codec-image` — the only shipping image path
 - `packages/codec-audio` — WAV routes plus ambient layering
 - `packages/codec-video` — composition-first video scaffold
-- `packages/codec-sensor` — deterministic signal generation plus `loupe` sidecars
+- `packages/codec-sensor` — deterministic signal generation plus loupe sidecars
 - `packages/cli` — the `wittgenstein` command
 - `apps/site` — official site scaffold
-- `python/image_adapter` — local image-adapter data and training scripts
-- `polyglot-mini` — rapid Python-first prototype area
+- `polyglot-mini` — Python rapid-prototype area; five-layer thesis end-to-end
 
 ## Locked Constraints
 
 - image has exactly one shipping path
 - shared contracts live in `packages/schemas`
 - runs stay traceable under `artifacts/`
-- the main harness should prefer deterministic, inspectable boundaries over prompt-only behavior
-- frozen decoders are in-bounds; general-purpose local image generators are not the intended main path
+- frozen decoders are in-bounds; general-purpose local image generators are not the main path
 
 ## License
 
-Apache 2.0. See [`LICENSE`](LICENSE).
+Apache 2.0. See `LICENSE`.
