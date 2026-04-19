@@ -1,0 +1,5 @@
+{
+  "modality": "audio",
+  "prompt": "A short spoken summary of the project",
+  "route": "speech"
+}

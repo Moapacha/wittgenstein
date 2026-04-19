@@ -1,0 +1,26 @@
+{
+  "name": "@polyglot/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "polyglot": "./bin/polyglot.js"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -b",
+    "lint": "eslint src test --ext .ts",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@polyglot/core": "workspace:*",
+    "@polyglot/schemas": "workspace:*",
+    "commander": "^12.1.0",
+    "tsx": "^4.19.0"
+  }
+}

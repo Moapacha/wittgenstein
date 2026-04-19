@@ -1,0 +1,45 @@
+{
+  "name": "polyglot-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Polyglot — a modality harness for text-first LLMs.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.12.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md}\"",
+    "bootstrap": "tsx scripts/bootstrap.ts",
+    "new-adr": "tsx scripts/new-adr.ts",
+    "doctor": "pnpm --filter @polyglot/cli exec polyglot doctor",
+    "dev:site": "pnpm --filter @polyglot-site dev"
+  },
+  "devDependencies": {
+    "@polyglot/cli": "workspace:*",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8.4.41",
+    "prettier": "^3.3.0",
+    "tailwindcss": "^3.4.10",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

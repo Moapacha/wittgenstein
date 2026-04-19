@@ -1,0 +1,5 @@
+{
+  "modality": "sensor",
+  "prompt": "A stable temperature trace with a brief anomaly",
+  "signal": "temperature"
+}

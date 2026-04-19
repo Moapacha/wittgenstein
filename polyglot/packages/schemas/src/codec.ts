@@ -1,0 +1,81 @@
+import { z } from "zod";
+import type { Modality } from "./modality.js";
+
+export type Result<T, E = CodecError> =
+  | { ok: true; value: T }
+  | { ok: false; error: E };
+
+export interface CodecError {
+  code: string;
+  message: string;
+  cause?: unknown;
+  details?: Record<string, unknown>;
+}
+
+export interface RenderCtx {
+  runId: string;
+  runDir: string;
+  seed: number | null;
+  outPath: string;
+  logger: {
+    debug: (msg: string, data?: unknown) => void;
+    info: (msg: string, data?: unknown) => void;
+    warn: (msg: string, data?: unknown) => void;
+    error: (msg: string, data?: unknown) => void;
+  };
+}
+
+export interface RenderResult {
+  artifactPath: string;
+  mimeType: string;
+  bytes: number;
+  metadata: {
+    codec: string;
+    route?: string;
+    llmTokens: { input: number; output: number };
+    costUsd: number;
+    durationMs: number;
+    seed: number | null;
+  };
+}
+
+export const RenderResultSchema = z.object({
+  artifactPath: z.string(),
+  mimeType: z.string(),
+  bytes: z.number().int().nonnegative(),
+  metadata: z.object({
+    codec: z.string(),
+    route: z.string().optional(),
+    llmTokens: z.object({
+      input: z.number().int().nonnegative(),
+      output: z.number().int().nonnegative(),
+    }),
+    costUsd: z.number().nonnegative(),
+    durationMs: z.number().nonnegative(),
+    seed: z.number().int().nullable(),
+  }),
+});
+
+export interface PolyglotCodec<Req, Parsed> {
+  name: string;
+  modality: Modality;
+  schemaPreamble: (req: Req) => string;
+  requestSchema: z.ZodType<Req, z.ZodTypeDef, unknown>;
+  outputSchema: z.ZodType<Parsed, z.ZodTypeDef, unknown>;
+  parse: (llmRaw: string) => Result<Parsed>;
+  render: (parsed: Parsed, ctx: RenderCtx) => Promise<RenderResult>;
+}
+
+export interface CodecMetadata {
+  name: string;
+  modality: Modality;
+  version: string;
+  routes?: readonly string[];
+}
+
+export const CodecMetadataSchema = z.object({
+  name: z.string(),
+  modality: z.enum(["image", "audio", "video", "sensor"]),
+  version: z.string(),
+  routes: z.array(z.string()).optional(),
+});

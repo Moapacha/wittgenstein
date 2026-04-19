@@ -1,0 +1,26 @@
+{
+  "name": "@polyglot/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -b",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@polyglot/codec-audio": "workspace:*",
+    "@polyglot/codec-image": "workspace:*",
+    "@polyglot/codec-sensor": "workspace:*",
+    "@polyglot/codec-video": "workspace:*",
+    "@polyglot/schemas": "workspace:*",
+    "@polyglot/sandbox": "workspace:*",
+    "zod": "^3.23.8"
+  }
+}

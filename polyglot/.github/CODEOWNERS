@@ -1,0 +1,19 @@
+* @max
+
+/packages/core/src/runtime/ @polyglot-core
+/packages/core/src/llm/ @polyglot-core
+/packages/core/src/codecs/image.ts @polyglot-image
+/packages/core/src/codecs/audio.ts @polyglot-audio
+/packages/core/src/codecs/video.ts @polyglot-video
+/packages/core/src/codecs/sensor.ts @polyglot-sensor
+/packages/schemas/ @polyglot-core
+/packages/sandbox/ @polyglot-core
+/packages/codec-image/ @polyglot-image
+/packages/codec-audio/ @polyglot-audio
+/packages/codec-video/ @polyglot-video
+/packages/codec-sensor/ @polyglot-sensor
+/apps/site/ @max
+/docs/codecs/image.md @polyglot-image
+/docs/codecs/audio.md @polyglot-audio
+/docs/codecs/video.md @polyglot-video
+/docs/codecs/sensor.md @polyglot-sensor

@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "outDir": "dist", "rootDir": "src" },
+  "include": ["src/**/*"],
+  "references": [
+    { "path": "../schemas" },
+    { "path": "../sandbox" },
+    { "path": "../codec-image" },
+    { "path": "../codec-audio" },
+    { "path": "../codec-video" },
+    { "path": "../codec-sensor" }
+  ]
+}
