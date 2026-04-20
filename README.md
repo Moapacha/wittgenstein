@@ -1,3 +1,4 @@
+<img width="1664" height="928" alt="image" src="https://github.com/user-attachments/assets/02d3bca3-fe33-44b9-a0c0-62be6ed260d8" />
 # Wittgenstein
 
 **The modality harness for text-first models.**
