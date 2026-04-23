@@ -304,6 +304,22 @@ Questions before you start? [`SUPPORT.md`](SUPPORT.md) shows where to ask what.
 
 ---
 
+## Contributors
+
+<a href="https://github.com/Moapacha/wittgenstein/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Moapacha/wittgenstein" alt="Image with all contributors" />
+</a>
+
+## Star History
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=Moapacha/wittgenstein&type=Date&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=Moapacha/wittgenstein&type=Date" />
+  <img alt="Star History Chart" src="https://api.star-history.com/image?repos=Moapacha/wittgenstein&type=Date" />
+</picture>
+
+---
+
 ## License
 
 Apache 2.0. See [`LICENSE`](LICENSE).
