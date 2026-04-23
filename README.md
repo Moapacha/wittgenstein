@@ -2,7 +2,7 @@
 
 # Wittgenstein
 
-**The modality harness for text-first models.**
+**The modality harness for text-first LLMs.**
 
 [![CI](https://img.shields.io/github/actions/workflow/status/Moapacha/wittgenstein/ci.yml?branch=main&label=CI)](./.github/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Moapacha/wittgenstein?include_prereleases&label=release)](https://github.com/Moapacha/wittgenstein/releases)
