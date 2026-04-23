@@ -8,6 +8,7 @@ import { Wittgenstein } from "../packages/core/src/index.ts";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const OUT_DIR = resolve(ROOT, "artifacts/showcase/workflow-examples");
+const CURATED_IMAGE_DIR = resolve(OUT_DIR, "curated/image");
 
 process.env.WITTGENSTEIN_IMAGE_ADAPTER_PREFERRED_PATH = resolve(
   ROOT,
@@ -50,6 +51,16 @@ class CuratedLocalAdapter {
 
 async function ensureDir(path: string) {
   await mkdir(path, { recursive: true });
+}
+
+async function applyCuratedImageOverride(targetPath: string, curatedFilename: string) {
+  const source = resolve(CURATED_IMAGE_DIR, curatedFilename);
+  try {
+    await copyFile(source, targetPath);
+    return source;
+  } catch {
+    return null;
+  }
 }
 
 function clone<T>(value: T): T {
@@ -205,7 +216,7 @@ async function main() {
 
   const imageDefs = [
     { id: "01-coastal", subject: "coastal shoreline", prompt: "Showcase image: coastal shoreline at soft daylight for the Wittgenstein demo." },
-    { id: "02-forest", subject: "forest path", prompt: "Showcase image: forest path with soft daylight for the Wittgenstein demo." },
+    { id: "02-forest", subject: "forest path", prompt: "Showcase image: verified prior workflow forest sample." },
     { id: "03-lake", subject: "lake or river", prompt: "Showcase image: lake or river landscape with quiet daylight for the Wittgenstein demo." },
     { id: "04-mountain", subject: "mountain vista", prompt: "Showcase image: mountain vista with wide composition for the Wittgenstein demo." },
     { id: "05-meadow", subject: "open meadow or hills", prompt: "Showcase image: open meadow or hills with wide framing for the Wittgenstein demo." },
@@ -419,6 +430,19 @@ async function main() {
     }
   }
 
+  for (const item of results) {
+    if (item.group !== "image" || typeof item.id !== "string" || typeof item.artifactPath !== "string") {
+      continue;
+    }
+    if (item.id === "02-forest") {
+      const curatedSource = await applyCuratedImageOverride(item.artifactPath as string, "02-forest.png");
+      if (curatedSource) {
+        item.curatedSource = curatedSource;
+        item.provenance = "verified-local-prior-run";
+      }
+    }
+  }
+
   const sampleSelections = {
     image: "02-forest",
     tts: "02-harness",
@@ -452,6 +476,10 @@ async function main() {
       }
     }
   }
+
+  try {
+    await copyFile(resolve(CURATED_IMAGE_DIR, "03-forest-alt.png"), resolve(sampleDir, "image", "03-forest-alt.png"));
+  } catch {}
 
   const byGroup = new Map<string, Array<Record<string, unknown>>>();
   for (const item of results) {

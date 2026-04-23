@@ -68,18 +68,19 @@ for the full measurement protocol.
 Numbers are cheap; files are not. The pack below was generated end-to-end through the
 harness — every artifact has a matching run manifest under `artifacts/runs/<run-id>/`.
 
-**One click per modality:**
+**One click per modality (curated `samples/` picks):**
 
 | Modality | Sample | Open |
 |---|---|---|
-| 🖼️ Image | `02-forest` | [`image/02-forest.png`](artifacts/showcase/workflow-examples/image/02-forest.png) |
-| 🎙️ TTS | `02-harness` | [`tts/02-harness.wav`](artifacts/showcase/workflow-examples/tts/02-harness.wav) |
-| 🎵 Music | `01-launch-minimal` | [`music/01-launch-minimal.wav`](artifacts/showcase/workflow-examples/music/01-launch-minimal.wav) |
-| 🌧️ Soundscape | `02-forest-morning` | [`soundscape/02-forest-morning.wav`](artifacts/showcase/workflow-examples/soundscape/02-forest-morning.wav) |
-| ❤️ Sensor / ECG | `05-clinical` | [`sensor/ecg/05-clinical.html`](artifacts/showcase/workflow-examples/sensor/ecg/05-clinical.html) |
-| 🌡️ Sensor / Temp | `02-greenhouse` | [`sensor/temperature/02-greenhouse.html`](artifacts/showcase/workflow-examples/sensor/temperature/02-greenhouse.html) |
-| 🎛️ Sensor / Gyro | `02-hover` | [`sensor/gyro/02-hover.html`](artifacts/showcase/workflow-examples/sensor/gyro/02-hover.html) |
+| 🖼️ Image | `02-forest` | [`samples/image/02-forest.png`](artifacts/showcase/workflow-examples/samples/image/02-forest.png) |
+| 🎙️ TTS | `02-harness` | [`samples/tts/02-harness.wav`](artifacts/showcase/workflow-examples/samples/tts/02-harness.wav) |
+| 🎵 Music | `01-launch-minimal` | [`samples/music/01-launch-minimal.wav`](artifacts/showcase/workflow-examples/samples/music/01-launch-minimal.wav) |
+| 🌧️ Soundscape | `02-forest-morning` | [`samples/soundscape/02-forest-morning.wav`](artifacts/showcase/workflow-examples/samples/soundscape/02-forest-morning.wav) |
+| ❤️ Sensor / ECG | `05-clinical` | [`samples/sensor-ecg/05-clinical.html`](artifacts/showcase/workflow-examples/samples/sensor-ecg/05-clinical.html) |
+| 🌡️ Sensor / Temp | `02-greenhouse` | [`samples/sensor-temperature/02-greenhouse.html`](artifacts/showcase/workflow-examples/samples/sensor-temperature/02-greenhouse.html) |
+| 🎛️ Sensor / Gyro | `02-hover` | [`samples/sensor-gyro/02-hover.html`](artifacts/showcase/workflow-examples/samples/sensor-gyro/02-hover.html) |
 
+- **Additional verified image example:** [`samples/image/03-forest-alt.png`](artifacts/showcase/workflow-examples/samples/image/03-forest-alt.png)
 - **Full pack (5 per group, 35 artifacts):** [`artifacts/showcase/workflow-examples/`](artifacts/showcase/workflow-examples/)
 - **Hand-picked samples folder:** [`artifacts/showcase/workflow-examples/samples/`](artifacts/showcase/workflow-examples/samples/)
 - **Rendered gallery:** [`SHOWCASE.md`](SHOWCASE.md)
@@ -186,6 +187,9 @@ cannot offer this; frozen VQ decoding does. See [`docs/reproducibility.md`](docs
 ## Docs map
 
 ### For engineers
+- [`docs/THESIS.md`](docs/THESIS.md) — the smallest locked statement page in the repo
+- [`docs/inheritance-audit.md`](docs/inheritance-audit.md) — what survives, what gets promoted, what gets retired
+- [`docs/SYNTHESIS_v0.2.md`](docs/SYNTHESIS_v0.2.md) — branch-level merge brief and human/agent handoff
 - [`docs/architecture.md`](docs/architecture.md) — five-layer system, dataflow, package layout
 - [`docs/codec-protocol.md`](docs/codec-protocol.md) — the `WittgensteinCodec` contract every codec obeys
 - [`docs/reproducibility.md`](docs/reproducibility.md) — manifest spine and seed rules

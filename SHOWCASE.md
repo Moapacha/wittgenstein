@@ -15,16 +15,19 @@ reproducible bit-for-bit.
 
 | Modality | Sample | File | Workflow |
 |---|---|---|---|
-| 🖼️ Image | `02-forest` | [`image/02-forest.png`](artifacts/showcase/workflow-examples/image/02-forest.png) | scene spec → adapter → frozen decoder → PNG |
-| 🎙️ TTS | `02-harness` | [`tts/02-harness.wav`](artifacts/showcase/workflow-examples/tts/02-harness.wav) | audio codec, speech route |
-| 🎵 Music | `01-launch-minimal` | [`music/01-launch-minimal.wav`](artifacts/showcase/workflow-examples/music/01-launch-minimal.wav) | audio codec, music route |
-| 🌧️ Soundscape | `02-forest-morning` | [`soundscape/02-forest-morning.wav`](artifacts/showcase/workflow-examples/soundscape/02-forest-morning.wav) | audio codec, soundscape route |
-| ❤️ ECG | `05-clinical` | [`sensor/ecg/05-clinical.html`](artifacts/showcase/workflow-examples/sensor/ecg/05-clinical.html) | operator spec → JSON + CSV + Loupe HTML |
-| 🌡️ Temperature | `02-greenhouse` | [`sensor/temperature/02-greenhouse.html`](artifacts/showcase/workflow-examples/sensor/temperature/02-greenhouse.html) | operator spec → JSON + CSV + Loupe HTML |
-| 🎛️ Gyro | `02-hover` | [`sensor/gyro/02-hover.html`](artifacts/showcase/workflow-examples/sensor/gyro/02-hover.html) | operator spec → JSON + CSV + Loupe HTML |
+| 🖼️ Image | `02-forest` | [`samples/image/02-forest.png`](artifacts/showcase/workflow-examples/samples/image/02-forest.png) | scene spec → adapter → frozen decoder → PNG |
+| 🎙️ TTS | `02-harness` | [`samples/tts/02-harness.wav`](artifacts/showcase/workflow-examples/samples/tts/02-harness.wav) | audio codec, speech route |
+| 🎵 Music | `01-launch-minimal` | [`samples/music/01-launch-minimal.wav`](artifacts/showcase/workflow-examples/samples/music/01-launch-minimal.wav) | audio codec, music route |
+| 🌧️ Soundscape | `02-forest-morning` | [`samples/soundscape/02-forest-morning.wav`](artifacts/showcase/workflow-examples/samples/soundscape/02-forest-morning.wav) | audio codec, soundscape route |
+| ❤️ ECG | `05-clinical` | [`samples/sensor-ecg/05-clinical.html`](artifacts/showcase/workflow-examples/samples/sensor-ecg/05-clinical.html) | operator spec → JSON + CSV + Loupe HTML |
+| 🌡️ Temperature | `02-greenhouse` | [`samples/sensor-temperature/02-greenhouse.html`](artifacts/showcase/workflow-examples/samples/sensor-temperature/02-greenhouse.html) | operator spec → JSON + CSV + Loupe HTML |
+| 🎛️ Gyro | `02-hover` | [`samples/sensor-gyro/02-hover.html`](artifacts/showcase/workflow-examples/samples/sensor-gyro/02-hover.html) | operator spec → JSON + CSV + Loupe HTML |
 
 The samples folder mirrors these picks as a self-contained subset:
 [`artifacts/showcase/workflow-examples/samples/`](artifacts/showcase/workflow-examples/samples/).
+
+Additional verified image example from the same workflow lineage:
+[`samples/image/03-forest-alt.png`](artifacts/showcase/workflow-examples/samples/image/03-forest-alt.png).
 
 ---
 
@@ -45,8 +48,10 @@ fallback. See [`docs/codecs/image.md`](docs/codecs/image.md).
 | 05 | [`image/05-meadow.png`](artifacts/showcase/workflow-examples/image/05-meadow.png) |
 
 > The showcase set uses a narrow-domain reference decoder bridge inside the neural path
-> so the demo looks less abstract while staying harness-compatible. The full VQ decoder
-> bridge is still ⚠️ Partial — see [`docs/implementation-status.md`](docs/implementation-status.md).
+> so the demo looks less abstract while staying harness-compatible. `02-forest` is a
+> verified prior-run workflow image, and `samples/image/03-forest-alt.png` is a second
+> verified local example from the same workflow lineage. The full VQ decoder bridge is
+> still ⚠️ Partial — see [`docs/implementation-status.md`](docs/implementation-status.md).
 
 ### 🎙️ TTS — audio codec, speech route
 

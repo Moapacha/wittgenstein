@@ -34,11 +34,13 @@
     {
       "group": "image",
       "id": "02-forest",
-      "prompt": "Showcase image: forest path with soft daylight for the Wittgenstein demo.",
+      "prompt": "Showcase image: verified prior workflow forest sample.",
       "outPath": "/Users/dujiayi/Desktop/Wittgenstein/artifacts/showcase/workflow-examples/image/02-forest.png",
       "runId": "2026-04-19T12-24-11-212Z-m9xzbg",
       "runDir": "/Users/dujiayi/Desktop/Wittgenstein/artifacts/runs/2026-04-19T12-24-11-212Z-m9xzbg",
       "artifactPath": "/Users/dujiayi/Desktop/Wittgenstein/artifacts/showcase/workflow-examples/image/02-forest.png",
+      "curatedSource": "/Users/dujiayi/Desktop/Wittgenstein/artifacts/showcase/workflow-examples/curated/image/02-forest.png",
+      "provenance": "verified-local-prior-run",
       "ok": true,
       "error": null
     },

@@ -24,17 +24,19 @@ plus 7 hand-picked samples mirrored under [`samples/`](samples/).
 | `sensor-temperature` | [`sensor/temperature/`](sensor/temperature/) | operator spec → JSON + CSV + Loupe HTML |
 | `sensor-gyro` | [`sensor/gyro/`](sensor/gyro/) | operator spec → JSON + CSV + Loupe HTML |
 
-## Sample picks (one per group, also mirrored in [`samples/`](samples/))
+## Sample picks (one per group, opened directly from [`samples/`](samples/))
 
 | Group | Pick | File to open first |
 |---|---|---|
-| Image | `02-forest` | [`image/02-forest.png`](image/02-forest.png) |
-| TTS | `02-harness` | [`tts/02-harness.wav`](tts/02-harness.wav) |
-| Music | `01-launch-minimal` | [`music/01-launch-minimal.wav`](music/01-launch-minimal.wav) |
-| Soundscape | `02-forest-morning` | [`soundscape/02-forest-morning.wav`](soundscape/02-forest-morning.wav) |
-| Sensor ECG | `05-clinical` | [`sensor/ecg/05-clinical.html`](sensor/ecg/05-clinical.html) |
-| Sensor Temperature | `02-greenhouse` | [`sensor/temperature/02-greenhouse.html`](sensor/temperature/02-greenhouse.html) |
-| Sensor Gyro | `02-hover` | [`sensor/gyro/02-hover.html`](sensor/gyro/02-hover.html) |
+| Image | `02-forest` | [`samples/image/02-forest.png`](samples/image/02-forest.png) |
+| TTS | `02-harness` | [`samples/tts/02-harness.wav`](samples/tts/02-harness.wav) |
+| Music | `01-launch-minimal` | [`samples/music/01-launch-minimal.wav`](samples/music/01-launch-minimal.wav) |
+| Soundscape | `02-forest-morning` | [`samples/soundscape/02-forest-morning.wav`](samples/soundscape/02-forest-morning.wav) |
+| Sensor ECG | `05-clinical` | [`samples/sensor-ecg/05-clinical.html`](samples/sensor-ecg/05-clinical.html) |
+| Sensor Temperature | `02-greenhouse` | [`samples/sensor-temperature/02-greenhouse.html`](samples/sensor-temperature/02-greenhouse.html) |
+| Sensor Gyro | `02-hover` | [`samples/sensor-gyro/02-hover.html`](samples/sensor-gyro/02-hover.html) |
+
+Additional verified image example: [`samples/image/03-forest-alt.png`](samples/image/03-forest-alt.png).
 
 Machine-readable index: [`summary.json`](summary.json).
 
@@ -44,8 +46,10 @@ Machine-readable index: [`summary.json`](summary.json).
 
 - **Image** uses the sole neural path: `scene spec → adapter → frozen decoder → PNG`.
   The showcase set routes through a narrow-domain reference decoder bridge inside that
-  path so the demo looks less abstract while staying harness-compatible. The full VQ
-  decoder bridge is still ⚠️ Partial; see
+  path so the demo looks less abstract while staying harness-compatible. `02-forest`
+  is now pinned to a verified prior-run workflow image, and
+  `samples/image/03-forest-alt.png` is a second verified local example from the same
+  workflow lineage. The full VQ decoder bridge is still ⚠️ Partial; see
   [`../../../docs/implementation-status.md`](../../../docs/implementation-status.md).
 - **TTS** uses the audio speech route. On macOS it upgrades to `say` + `afconvert`
   automatically; elsewhere it uses the stdlib WAV synth.
