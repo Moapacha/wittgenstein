@@ -52,7 +52,7 @@
   "dependencies": {
     "@wittgenstein/core": "workspace:*",
     "@wittgenstein/schemas": "workspace:*",
-    "commander": "^12.1.0",
+    "commander": "^14.0.3",
     "tsx": "^4.19.0"
   },
   "devDependencies": {
