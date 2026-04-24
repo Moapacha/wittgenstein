@@ -6,7 +6,7 @@ Accepted
 
 ## Decision
 
-Wittgenstein adopts Brief B's Position (iii) Layered as its epistemic stance, enforced via Position (iv) Agnostic as the engineering contract. Concretely: the compression lineage (Shannon / Kolmogorov / Hutter / Sutskever / Delétang 2023, arXiv:2309.10668) governs rendering — tokens in, artifact out, next-token prediction all the way down. The world-model lineage (LeCun 2022 position paper; I-JEPA arXiv:2301.08243; V-JEPA arXiv:2404.08471; V-JEPA 2 arXiv:2506.09985) is acknowledged as the credible counter-hypothesis for planning and reserved a slot in the protocol without being implemented yet. The `Handoff = Text | Latent | Hybrid` sum type (RFC-0001, renamed from `IR` by RFC-0003) encodes this contract: `Text` ships now, `Latent` is JEPA's slot, `Hybrid` is the escape hatch.
+Wittgenstein adopts Brief B's Position (iii) Layered as its epistemic stance, enforced via Position (iv) Agnostic as the engineering contract. Concretely: the compression lineage (Shannon / Kolmogorov / Hutter / Sutskever / Delétang 2023, arXiv:2309.10668) governs rendering — tokens in, artifact out, next-token prediction all the way down. The world-model lineage (LeCun 2022 position paper; I-JEPA arXiv:2301.08243; V-JEPA arXiv:2404.08471; V-JEPA 2 arXiv:2506.09985) is acknowledged as the credible counter-hypothesis for planning and reserved a slot in the protocol without being implemented yet. The `IR = Text | Latent | Hybrid` sum type (RFC-0001; name locked by ADR-0011) encodes this contract: `Text` ships now, `Latent` is JEPA's slot, `Hybrid` is the escape hatch.
 
 ## Consequence
 

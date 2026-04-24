@@ -2,9 +2,9 @@
 
 **Date:** 2026-04-25
 **Author:** engineering (max.zhuang.yan@gmail.com)
-**Status:** 🟡 Draft v0.1
+**Status:** ⛔ **Superseded by RFC-0005 (2026-04-24)** per `docs/v02-alignment-review.md` §2.2. Kept as a historical record of the naming-pass reasoning; the four proposed names (Loom / Transducer / Score / Handoff) are **not** adopted. See RFC-0005 for the actual locked vocabulary (Codec / IR / Spec / Adapter / Decoder), which matches the original PPT and the existing `AGENTS.md` §Architectural vocabulary.
 **Feeds from:** RFC-0001 (Codec Protocol v2), Brief B (agnostic IR)
-**Ratified by:** ADR-0010 (pending)
+**Ratified by:** — (superseded before ratification; ADR-0010 also superseded by ADR-0011)
 
 **Summary:** With the codec protocol frozen, we name the four concepts that have been walking around as placeholders — Loom, Transducer, Score, and Handoff — and retire "Parasoid" with prejudice.
 
@@ -14,7 +14,7 @@
 
 This RFC exists because RFC-0001 locked the protocol and nothing else. A protocol can ship with ugly names; a vocabulary cannot. For the last two months the team has been writing docs, Slack messages, and whiteboard sketches using four placeholder terms that are either inherited from earlier drafts or invented ad hoc: "Parasoid" for the middleware layer, "adapter/decoder pair" for the two-sided transform, "Build Artifact" for the intermediate composition, and "IR" for the sum type `Text | Latent | Hybrid` out of Brief B. Each of these is a slot — a shape the architecture now unambiguously has — and each needs exactly one name.
 
-Naming happens now, not earlier, and not later. Earlier was wrong because the protocol was still moving; we would have named abstractions that later fused or split. Later is wrong because the v0.2 action plan locks the thesis as "modality harness for text-first models," and code generation against RFC-0001 begins at P6. If we let code land with `IR` in the type signatures, we will pay a rename cost across every package; if we let "Parasoid" persist into external comms, we inherit a word the inheritance-audit already flagged as retire-with-replacement (biological connotation, unpronounceable outside English, and a live branding risk).
+Naming happens now, not earlier, and not later. Earlier was wrong because the protocol was still moving; we would have named abstractions that later fused or split. Later is wrong because the v0.2 action plan locks the thesis as "modality harness for text-first LLMs," and code generation against RFC-0001 begins at P6. If we let code land with `IR` in the type signatures, we will pay a rename cost across every package; if we let "Parasoid" persist into external comms, we inherit a word the inheritance-audit already flagged as retire-with-replacement (biological connotation, unpronounceable outside English, and a live branding risk).
 
 Four hard constraints apply. **Grep-able:** each name must be a single token that survives `rg` without false positives across the monorepo. **Pronounceable in English and 中文:** the team is bilingual; names that require phonetic gymnastics in either language get rejected. **No collision with the incumbent industry vocabulary:** we explicitly avoid Anthropic's "harness," "agent," "tool," "skill" (except where we deliberately extend "harness"); OpenAI's "assistant," "thread"; and LangChain's "chain," "runnable." **Metaphor-coherent:** the chosen names should compose — a reader who learns one should find the others less surprising, not more.
 

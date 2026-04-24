@@ -122,7 +122,7 @@ async produce(req: Req, ctx: HarnessCtx): Promise<Art> {
   const route = this.routes.find(r => r.match(req));
   if (!route) throw new NoRouteError(this.id, req);
 
-  const ir        = await this.expand(req, ctx);   // LLM, 2 rounds
+  const ir        = await this.expand(req, ctx);   // LLM: 1 round default; 2 rounds via --expand
   const decIn     = await this.adapt(ir, ctx);     // L4: trained adapter (may be no-op)
   const bytes     = await this.decode(decIn, ctx); // L5: frozen decoder (may be passthrough)
   const artifact  = await this.pkg(bytes, req, route, ctx);
@@ -134,7 +134,19 @@ async produce(req: Req, ctx: HarnessCtx): Promise<Art> {
 
 ### One LLM call or two?
 
-**Recommendation: two rounds by default**, overridable per-codec.
+> **Amended 2026-04-24** per `docs/v02-alignment-review.md` §2.3.
+> **Default: one round** with schema-in-preamble (the current `codec-image/src/pipeline/expand.ts`
+> shape, matching the PPT's strict-image-path slide). Two rounds are available
+> behind an opt-in `--expand` flag per codec, but are not the default.
+> Reason: the two-round claim below (cost amortized to ~1.2× via round-1 cache,
+> CLIPScore uplift on composite prompts) is plausible but unmeasured. The measurement
+> belongs in Brief E / M1 of the exec plan, not in the default pipeline. Ship what the
+> hackathon shipped; upgrade when evidence justifies the cost.
+>
+> The historical "two rounds by default" recommendation is preserved below as context
+> for the M1 evaluation gate.
+
+**Historical recommendation (now `--expand` opt-in, not default): two rounds**, overridable per-codec.
 
 Round 1 is an unconstrained natural-language call:
 

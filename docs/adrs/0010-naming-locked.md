@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (ratifies RFC-0003)
+⛔ **Superseded by ADR-0011 (2026-04-24).** Kept for historical traceability. The four names below (Loom / Transducer / Score / Handoff) are **not** adopted; see ADR-0011 for the locked vocabulary (Harness / Codec / IR / Spec / Adapter / Decoder / Packaging), which matches `AGENTS.md` §Architectural vocabulary and the original PPT. Reason for reversal: `docs/v02-alignment-review.md` §2.2 — the RFC-0003 rename replaced names that were already correct in the codebase and pitch, at measurable agent-readability cost.
 
 ## Decision
 

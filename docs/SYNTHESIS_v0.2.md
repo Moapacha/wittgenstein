@@ -78,7 +78,7 @@ They are now explicit repo doctrine unless superseded by ADR:
 
 | Locked statement | Where locked |
 |---|---|
-| Wittgenstein is the modality harness for text-first models | [`THESIS.md`](THESIS.md) |
+| Wittgenstein is the modality harness for text-first LLMs | [`THESIS.md`](THESIS.md) |
 | Modality capability is added outside the base model | [`THESIS.md`](THESIS.md) |
 | Five-layer foundation (L1–L5) remains the architectural bet | [`THESIS.md`](THESIS.md) |
 | Decoder ≠ generator | [`THESIS.md`](THESIS.md), [`inheritance-audit.md`](inheritance-audit.md) |
@@ -217,13 +217,13 @@ that stance.
 
 **Permanent (ADR-backed):**
 
-- Thesis: "the modality harness for text-first models"
+- Thesis: "the modality harness for text-first LLMs"
 - L1–L5 architecture, decoder ≠ generator, no silent fallbacks, RunManifest spine
 - Layered epistemology (ADR-0006) — `Handoff = Text | Latent | Hybrid` sum type; only `Text` ships at v0.2
 - Path C rejected (ADR-0007) — no full multimodal retrain through v0.4
 - Codec Protocol v2 (ADR-0008) — kill date for pre-v2 surface is v0.3.0
 - CLI ergonomics v2 (ADR-0009) — NDJSON contract, two deliberate divergences (no REPL, no user-facing `--model`)
-- Naming locked (ADR-0010) — Loom / Transducer / Score / Handoff; "Parasoid" retires
+- Naming locked (ADR-0011, supersedes ADR-0010) — Harness / Codec / Spec / IR / Decoder / Adapter / Packaging; "Parasoid" retires. The RFC-0003 rename (Loom / Transducer / Score / Handoff) was reverted in `docs/v02-alignment-review.md` §2.2 because the existing PPT / `AGENTS.md` vocabulary was already correct.
 
 **Still open (returns in P6 — separate execution plan):**
 

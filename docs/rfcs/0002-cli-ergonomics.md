@@ -48,7 +48,7 @@ wittgenstein showcase                       # list/browse the 35-artifact showca
 wittgenstein init                           # scaffold ./wittgenstein.toml
 ```
 
-Modality is always the first positional. Route is the codec-declared sub-mode (e.g. `audio speech`, `audio soundscape`, `audio music`), surfaced by the codec's `Route.match` as declared in RFC-0001. The verb is never the first positional, matching `gh <resource> <verb>`.
+Modality is always the first positional. Route is the codec-declared sub-mode (e.g. `audio speech`, `audio soundscape`, `audio music`), surfaced by the codec's `Route.match` as declared in RFC-0001. The verb is never the first positional, matching `gh <resource> <verb>` (GitHub, 2025) and `lark <resource> <verb>` (larksuite/cli, 2023–2026) — the two reference CLIs whose noun-first taxonomy composes best in shell pipelines and is most readable to an agent skimming `--help` output. See Brief D §Lark CLI for the three-tier auth pattern this RFC's `wittgenstein auth <provider>` surface inherits.
 
 ### Flag baseline
 

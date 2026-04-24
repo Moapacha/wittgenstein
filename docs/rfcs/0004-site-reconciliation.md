@@ -22,7 +22,7 @@ Adopt **Posture B — Rewrite**, with one caveat drawn from Brief F's punch list
 
 Before the site ships, execute two preparatory fixes the brief flagged inside the repo:
 
-- **Fix the README↔THESIS noun mismatch**: `README.md:5` says *"text-first LLMs"*; `THESIS.md §Master` and the current site placeholder both say *"text-first models."* THESIS is the locked source; README follows. Five-second edit, kills the only live contradiction Brief F found.
+- **Fix the site↔THESIS noun mismatch**: `THESIS.md §Master` and `README.md:5` both say *"text-first LLMs"* (locked 2026-04-24 via `docs/v02-alignment-review.md` §2.1); the live placeholder still says *"text-first models."* The site is the one that must change at M4. No repo edits needed.
 - **Park Brief F's follow-up** (F.1) until the site has enough real content to drift from. The kill criterion for reopening F is specified below.
 
 Until the rewrite ships, the current placeholder is worse than nothing — it signals project abandonment to readers arriving from off-repo. Redirect the domain to `github.com/Moapacha/wittgenstein` in the interim.
@@ -32,7 +32,7 @@ Until the rewrite ships, the current placeholder is worse than nothing — it si
 The site is a single static page, statically generated, deployed from a small site repo (or a `docs/site/` subtree — either works; the choice belongs to the site PR, not this RFC). Sections, in order:
 
 1. **Hero** — the master statement, lifted from `THESIS.md §Master`:
-   > *Wittgenstein is the modality harness for text-first models.*
+   > *Wittgenstein is the modality harness for text-first LLMs.*
 2. **Status banner** (above fold) — mirrors `README.md:25–29`: *v0.1.0-alpha.2 · early-stage · breaking changes possible.*
 3. **What it is** — lift the extension-form paragraph from `THESIS.md §Extension form` verbatim.
 4. **Architectural bet** — L1–L5 card or five-row table, pulled from `THESIS.md §Architectural bet`. No custom diagrams; use a monospace text figure if anything beyond the table is needed, or none at all for v0.1.
@@ -52,7 +52,7 @@ Source-of-truth contract: every line of rendered prose on the site must be trace
 Staged, with the interim redirect keeping the public URL useful at every step:
 
 - **M1 (now, this RFC's merge):** authority is transferred to Brief F's verdict. No site work yet.
-- **M2 (this week):** open a one-line PR against the repo fixing `README.md:5` *"text-first LLMs"* → *"text-first models."* Landing this before M3 guarantees the site's first sentence does not disagree with its own source.
+- **M2 (this week):** no repo-side noun edit needed — THESIS and README already agree on *"text-first LLMs"* after `docs/v02-alignment-review.md` §2.1 landed. The site is the one that will need to match at M4.
 - **M3 (this week):** point `wittgenstein.wtf` at a 302 redirect to `github.com/Moapacha/wittgenstein`. A redirect is strictly better than a placeholder — readers land on a maintained surface instead of a dead one.
 - **M4 (within 1 sprint):** ship the site described under `## Interface` as a separate PR in the site repo (or `docs/site/`, decision deferred). Removes the redirect.
 - **M5 (on every minor release):** add a "site diff" item to the release checklist — if `THESIS.md` or the showcase grid changed, regenerate and redeploy. Because the site is lifted verbatim, this is a build-and-push step, not a review step.

@@ -6,7 +6,7 @@ Accepted
 
 ## Decision
 
-Wittgenstein does not pursue Path C — Chameleon-style (Meta FAIR 2024, arXiv:2405.09818) or LlamaGen-style (Sun et al. 2024, arXiv:2406.06525) full multimodal retrain of the base transformer. The master statement *"the modality harness for text-first models"* is incompatible with retraining the text-first model. Path C survives in the repo only as a contrast class in pitch material and in Brief A's lineage audit — "why we don't do this."
+Wittgenstein does not pursue Path C — Chameleon-style (Meta FAIR 2024, arXiv:2405.09818) or LlamaGen-style (Sun et al. 2024, arXiv:2406.06525) full multimodal retrain of the base transformer. The master statement *"the modality harness for text-first LLMs"* is incompatible with retraining the text-first model. Path C survives in the repo only as a contrast class in pitch material and in Brief A's lineage audit — "why we don't do this."
 
 ## Consequence
 
