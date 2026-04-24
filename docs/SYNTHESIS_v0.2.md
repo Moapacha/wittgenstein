@@ -61,13 +61,13 @@ Read from left to right:
 
 ## 3. Change map
 
-| Workstream | Why it exists | Main files |
-|---|---|---|
-| Thesis lock-in | Stop drift in the core claim | [`THESIS.md`](THESIS.md) |
-| Inheritance audit | Make implicit repo beliefs explicit | [`inheritance-audit.md`](inheritance-audit.md) |
-| Showcase provenance correction | Fix the public sample image so it matches verified local workflow output | [`../SHOWCASE.md`](../SHOWCASE.md), [`../artifacts/showcase/workflow-examples/`](../artifacts/showcase/workflow-examples/) |
-| Regeneration guardrail | Prevent future showcase reruns from silently restoring the wrong image sample | [`../scripts/generate_workflow_examples.ts`](../scripts/generate_workflow_examples.ts) |
-| Merge brief / handoff | Give humans and agents one readable synthesis page | this file |
+| Workstream                     | Why it exists                                                                 | Main files                                                                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Thesis lock-in                 | Stop drift in the core claim                                                  | [`THESIS.md`](THESIS.md)                                                                                                   |
+| Inheritance audit              | Make implicit repo beliefs explicit                                           | [`inheritance-audit.md`](inheritance-audit.md)                                                                             |
+| Showcase provenance correction | Fix the public sample image so it matches verified local workflow output      | [`../SHOWCASE.md`](../SHOWCASE.md), [`../artifacts/showcase/workflow-examples/`](../artifacts/showcase/workflow-examples/) |
+| Regeneration guardrail         | Prevent future showcase reruns from silently restoring the wrong image sample | [`../scripts/generate_workflow_examples.ts`](../scripts/generate_workflow_examples.ts)                                     |
+| Merge brief / handoff          | Give humans and agents one readable synthesis page                            | this file                                                                                                                  |
 
 ---
 
@@ -76,15 +76,15 @@ Read from left to right:
 These statements are no longer "probably true" or "how we happened to talk about it."
 They are now explicit repo doctrine unless superseded by ADR:
 
-| Locked statement | Where locked |
-|---|---|
-| Wittgenstein is the modality harness for text-first LLMs | [`THESIS.md`](THESIS.md) |
-| Modality capability is added outside the base model | [`THESIS.md`](THESIS.md) |
-| Five-layer foundation (L1–L5) remains the architectural bet | [`THESIS.md`](THESIS.md) |
-| Decoder ≠ generator | [`THESIS.md`](THESIS.md), [`inheritance-audit.md`](inheritance-audit.md) |
-| Reproducibility via manifest + seed + artifact hash is a product feature | [`THESIS.md`](THESIS.md) |
-| Chameleon/LlamaGen-style full retrain is not our path | [`THESIS.md`](THESIS.md), [`inheritance-audit.md`](inheritance-audit.md) |
-| Silent fallbacks are not acceptable | [`THESIS.md`](THESIS.md), [`inheritance-audit.md`](inheritance-audit.md) |
+| Locked statement                                                         | Where locked                                                             |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| Wittgenstein is the modality harness for text-first LLMs                 | [`THESIS.md`](THESIS.md)                                                 |
+| Modality capability is added outside the base model                      | [`THESIS.md`](THESIS.md)                                                 |
+| Five-layer foundation (L1–L5) remains the architectural bet              | [`THESIS.md`](THESIS.md)                                                 |
+| Decoder ≠ generator                                                      | [`THESIS.md`](THESIS.md), [`inheritance-audit.md`](inheritance-audit.md) |
+| Reproducibility via manifest + seed + artifact hash is a product feature | [`THESIS.md`](THESIS.md)                                                 |
+| Chameleon/LlamaGen-style full retrain is not our path                    | [`THESIS.md`](THESIS.md), [`inheritance-audit.md`](inheritance-audit.md) |
+| Silent fallbacks are not acceptable                                      | [`THESIS.md`](THESIS.md), [`inheritance-audit.md`](inheritance-audit.md) |
 
 ---
 
@@ -92,12 +92,12 @@ They are now explicit repo doctrine unless superseded by ADR:
 
 Not everything should be frozen yet. Some things needed to be named and parked.
 
-| Category | Meaning | Examples |
-|---|---|---|
-| `Promote` | already believed, not yet written well enough | compression framing, METR / harness evidence, adapter universality hypothesis |
-| `Revise` | open question with a named decision venue | one-call vs two-call image pipeline, middleware naming, website/repo reconciliation |
-| `Retire` | legacy scaffold that should leave once replaced | request-level strategy fields, harness-owned modality branching, route boilerplate |
-| `Parked` | explicitly out of scope for this phase | real decoder bridge, new modalities, real perceptual benchmarks |
+| Category  | Meaning                                         | Examples                                                                            |
+| --------- | ----------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `Promote` | already believed, not yet written well enough   | compression framing, METR / harness evidence, adapter universality hypothesis       |
+| `Revise`  | open question with a named decision venue       | one-call vs two-call image pipeline, middleware naming, website/repo reconciliation |
+| `Retire`  | legacy scaffold that should leave once replaced | request-level strategy fields, harness-owned modality branching, route boilerplate  |
+| `Parked`  | explicitly out of scope for this phase          | real decoder bridge, new modalities, real perceptual benchmarks                     |
 
 That classification is the point of [`inheritance-audit.md`](inheritance-audit.md): no silent
 survivors, no silent deletions.
@@ -202,12 +202,12 @@ After merge, `main` should inherit four durable improvements:
 The P1 synthesis above set up four immediate next moves. All four have since landed as
 dated PRs and are now either merged or in review:
 
-| Phase | PR | Outputs | Status |
-|---|---|---|---|
-| P2a | [#7](https://github.com/wittgenstein-cli/wittgenstein/pull/7) | Briefs A (VQ/VLM lineage), B (Ilya↔LeCun, critical-path), C (horizon scan) | merged |
-| P2b | [#33](https://github.com/wittgenstein-cli/wittgenstein/pull/33) | Briefs D (CLI conventions), E (benchmarks v2), F (site reconciliation) | open |
-| P3 | [#34](https://github.com/wittgenstein-cli/wittgenstein/pull/34) | RFCs 0001 (Codec Protocol v2), 0002 (CLI ergonomics), 0003 (Naming: Loom/Transducer/Score/Handoff), 0004 (Site) | open |
-| P4 | [#35](https://github.com/wittgenstein-cli/wittgenstein/pull/35) | ADRs 0006 (Layered epistemology), 0007 (Path-C rejected), 0008 (Codec v2 adoption), 0009 (CLI v2), 0010 (Naming locked) | open |
+| Phase | PR                                                              | Outputs                                                                                                                 | Status |
+| ----- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ |
+| P2a   | [#7](https://github.com/wittgenstein-cli/wittgenstein/pull/7)   | Briefs A (VQ/VLM lineage), B (Ilya↔LeCun, critical-path), C (horizon scan)                                              | merged |
+| P2b   | [#33](https://github.com/wittgenstein-cli/wittgenstein/pull/33) | Briefs D (CLI conventions), E (benchmarks v2), F (site reconciliation)                                                  | merged |
+| P3    | [#34](https://github.com/wittgenstein-cli/wittgenstein/pull/34) | RFCs 0001 (Codec Protocol v2), 0002 (CLI ergonomics), 0003 (Naming: Loom/Transducer/Score/Handoff), 0004 (Site)         | merged |
+| P4    | [#35](https://github.com/wittgenstein-cli/wittgenstein/pull/35) | ADRs 0006 (Layered epistemology), 0007 (Path-C rejected), 0008 (Codec v2 adoption), 0009 (CLI v2), 0010 (Naming locked) | merged |
 
 The critical-path verdict from Brief B — **Position (iii) Layered + (iv) Agnostic
 contract** — is now load-bearing via ADR-0006. Every downstream decision inherits from
@@ -237,4 +237,3 @@ that stance.
 - `docs/tracks.md` — the contract between researcher and hacker tracks.
 - `docs/rfcs/README.md` + `docs/rfcs/00_template.md` — RFC process and template.
 - Two-hats review (Researcher + Hacker) is enforced on every brief, RFC, and ADR.
-

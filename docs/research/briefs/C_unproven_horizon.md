@@ -5,6 +5,8 @@
 **Author:** research pass, max.zhuang.yan@gmail.com
 **One-line summary:** Eight load-bearing hypotheses that are neither settled science (Brief A) nor live theoretical tension (Brief B) but, if they resolve the way we suspect, each flips one decision in Wittgenstein's 18-month roadmap — we name them, price them, and mark which ones to bet on now.
 
+> **v0.2 scope note:** this brief is roadmap input, not a v0.2 gate. Its hypotheses inform v0.3+ sequencing; they do not block the v0.2 doctrine lock.
+
 ---
 
 ## Scope and ground rules

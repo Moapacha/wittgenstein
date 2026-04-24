@@ -4,8 +4,8 @@
 
 **The modality harness for text-first LLMs.**
 
-[![CI](https://img.shields.io/github/actions/workflow/status/Moapacha/wittgenstein/ci.yml?branch=main&label=CI)](./.github/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/Moapacha/wittgenstein?include_prereleases&label=release)](https://github.com/Moapacha/wittgenstein/releases)
+[![CI](https://img.shields.io/github/actions/workflow/status/wittgenstein-cli/wittgenstein/ci.yml?branch=main&label=CI)](./.github/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/wittgenstein-cli/wittgenstein?include_prereleases&label=release)](https://github.com/wittgenstein-cli/wittgenstein/releases)
 [![Status](https://img.shields.io/badge/status-early--stage-orange)](./docs/implementation-status.md)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](./LICENSE)
 [![Node](https://img.shields.io/badge/node-%3E%3D20.19-brightgreen)](./.nvmrc)
@@ -14,7 +14,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)](./polyglot-mini/requirements.txt)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](./CONTRIBUTING.md)
 
-> *Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt.* — Tractatus 5.6
+> _Die Grenzen meiner Sprache bedeuten die Grenzen meiner Welt._ — Tractatus 5.6
 
 The limits of a language model's expression are the limits of what a harness built on top
 of it can plan. Wittgenstein's response is to extend what the model can **express as structured
@@ -49,14 +49,14 @@ Wittgenstein makes three architectural bets instead:
 
 ## Receipts (not claims)
 
-| What | Number | How |
-|---|---|---|
-| Image style MLP validation loss | **0.7698 BCE** | 781 COCO captions, 9 s on CPU, 600 epochs |
-| Audio ambient classifier accuracy | **5 / 5 spot checks** | 369 examples, < 5 s on CPU, keyword + MLP hybrid |
-| LLM token cost: scene JSON vs raw pixels | **~ 52,000× less** | 60 tokens vs 1024×1024×3 pixel values |
-| Sensor expand latency | **< 2 ms** | Pure numpy, 250 Hz × 10 s ECG with operator spec |
-| Loupe HTML dashboard size | **~ 117 KB** | Zero external dependencies, single self-contained file |
-| Full typecheck + lint | **10 / 10 packages green** | Strict TS, ESLint, pnpm workspaces |
+| What                                     | Number                     | How                                                    |
+| ---------------------------------------- | -------------------------- | ------------------------------------------------------ |
+| Image style MLP validation loss          | **0.7698 BCE**             | 781 COCO captions, 9 s on CPU, 600 epochs              |
+| Audio ambient classifier accuracy        | **5 / 5 spot checks**      | 369 examples, < 5 s on CPU, keyword + MLP hybrid       |
+| LLM token cost: scene JSON vs raw pixels | **~ 52,000× less**         | 60 tokens vs 1024×1024×3 pixel values                  |
+| Sensor expand latency                    | **< 2 ms**                 | Pure numpy, 250 Hz × 10 s ECG with operator spec       |
+| Loupe HTML dashboard size                | **~ 117 KB**               | Zero external dependencies, single self-contained file |
+| Full typecheck + lint                    | **10 / 10 packages green** | Strict TS, ESLint, pnpm workspaces                     |
 
 Adapter training stats are from real runs; see [`docs/benchmark-standards.md`](docs/benchmark-standards.md)
 for the full measurement protocol.
@@ -70,16 +70,16 @@ harness — every artifact has a matching run manifest under `artifacts/runs/<ru
 
 **One click per modality (curated `samples/` picks):**
 
-| Modality | Sample | Open |
-|---|---|---|
-| 🖼️ Image | `02-forest` | [`samples/image/02-forest.png`](artifacts/showcase/workflow-examples/samples/image/02-forest.png) |
-| 🖼️ Image 2 | `03-forest-alt` | [`samples/image/03-forest-alt.png`](artifacts/showcase/workflow-examples/samples/image/03-forest-alt.png) |
-| 🎙️ TTS | `02-harness` | [`samples/tts/02-harness.wav`](artifacts/showcase/workflow-examples/samples/tts/02-harness.wav) |
-| 🎵 Music | `01-launch-minimal` | [`samples/music/01-launch-minimal.wav`](artifacts/showcase/workflow-examples/samples/music/01-launch-minimal.wav) |
-| 🌧️ Soundscape | `02-forest-morning` | [`samples/soundscape/02-forest-morning.wav`](artifacts/showcase/workflow-examples/samples/soundscape/02-forest-morning.wav) |
-| ❤️ Sensor / ECG | `05-clinical` | [`samples/sensor-ecg/05-clinical.html`](artifacts/showcase/workflow-examples/samples/sensor-ecg/05-clinical.html) |
-| 🌡️ Sensor / Temp | `02-greenhouse` | [`samples/sensor-temperature/02-greenhouse.html`](artifacts/showcase/workflow-examples/samples/sensor-temperature/02-greenhouse.html) |
-| 🎛️ Sensor / Gyro | `02-hover` | [`samples/sensor-gyro/02-hover.html`](artifacts/showcase/workflow-examples/samples/sensor-gyro/02-hover.html) |
+| Modality         | Sample              | Open                                                                                                                                  |
+| ---------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 🖼️ Image         | `02-forest`         | [`samples/image/02-forest.png`](artifacts/showcase/workflow-examples/samples/image/02-forest.png)                                     |
+| 🖼️ Image 2       | `03-forest-alt`     | [`samples/image/03-forest-alt.png`](artifacts/showcase/workflow-examples/samples/image/03-forest-alt.png)                             |
+| 🎙️ TTS           | `02-harness`        | [`samples/tts/02-harness.wav`](artifacts/showcase/workflow-examples/samples/tts/02-harness.wav)                                       |
+| 🎵 Music         | `01-launch-minimal` | [`samples/music/01-launch-minimal.wav`](artifacts/showcase/workflow-examples/samples/music/01-launch-minimal.wav)                     |
+| 🌧️ Soundscape    | `02-forest-morning` | [`samples/soundscape/02-forest-morning.wav`](artifacts/showcase/workflow-examples/samples/soundscape/02-forest-morning.wav)           |
+| ❤️ Sensor / ECG  | `05-clinical`       | [`samples/sensor-ecg/05-clinical.html`](artifacts/showcase/workflow-examples/samples/sensor-ecg/05-clinical.html)                     |
+| 🌡️ Sensor / Temp | `02-greenhouse`     | [`samples/sensor-temperature/02-greenhouse.html`](artifacts/showcase/workflow-examples/samples/sensor-temperature/02-greenhouse.html) |
+| 🎛️ Sensor / Gyro | `02-hover`          | [`samples/sensor-gyro/02-hover.html`](artifacts/showcase/workflow-examples/samples/sensor-gyro/02-hover.html)                         |
 
 - **Full pack (5 per group, 35 artifacts):** [`artifacts/showcase/workflow-examples/`](artifacts/showcase/workflow-examples/)
 - **Hand-picked samples folder:** [`artifacts/showcase/workflow-examples/samples/`](artifacts/showcase/workflow-examples/samples/)
@@ -141,10 +141,10 @@ Full tour: [`docs/quickstart.md`](docs/quickstart.md).
 
 ## Two surfaces, one architecture
 
-| Surface | Lives at | Best for |
-|---|---|---|
-| **Python prototype** | `polyglot-mini/` | Rapid iteration, demos, adapter training, hackathon velocity |
-| **TypeScript harness** | `packages/*` | Typed contracts, strict CI gates, production distribution |
+| Surface                | Lives at         | Best for                                                     |
+| ---------------------- | ---------------- | ------------------------------------------------------------ |
+| **Python prototype**   | `polyglot-mini/` | Rapid iteration, demos, adapter training, hackathon velocity |
+| **TypeScript harness** | `packages/*`     | Typed contracts, strict CI gates, production distribution    |
 
 Both implement the same five layers. Start on the Python side, graduate to TypeScript when
 the codec design is stable. See [`docs/extending.md`](docs/extending.md) for the porting recipe.
@@ -187,6 +187,7 @@ cannot offer this; frozen VQ decoding does. See [`docs/reproducibility.md`](docs
 ## Docs map
 
 ### For engineers
+
 - [`docs/THESIS.md`](docs/THESIS.md) — the smallest locked statement page in the repo
 - [`docs/inheritance-audit.md`](docs/inheritance-audit.md) — what survives, what gets promoted, what gets retired
 - [`docs/SYNTHESIS_v0.2.md`](docs/SYNTHESIS_v0.2.md) — branch-level merge brief and human/agent handoff
@@ -197,6 +198,7 @@ cannot offer this; frozen VQ decoding does. See [`docs/reproducibility.md`](docs
 - [`docs/hard-constraints.md`](docs/hard-constraints.md) — what will not change
 
 ### For hackers
+
 - [`SHOWCASE.md`](SHOWCASE.md) — 35 real artifacts across 7 modality groups, click to open
 - [`docs/quickstart.md`](docs/quickstart.md) — 30 seconds to a real file
 - [`polyglot-mini/README.md`](polyglot-mini/README.md) — Python surface deep-dive
@@ -205,6 +207,7 @@ cannot offer this; frozen VQ decoding does. See [`docs/reproducibility.md`](docs
 - [`SUPPORT.md`](SUPPORT.md) — where to ask what, how to file an effective issue
 
 ### For researchers
+
 - [`docs/research/vq-tokens-as-interface.md`](docs/research/vq-tokens-as-interface.md) — why discrete VQ tokens as the LLM–decoder bridge
 - [`docs/research/compression-view-of-llms.md`](docs/research/compression-view-of-llms.md) — LLMs as neural compressors; why structured IR beats pixel emission
 - [`docs/research/frozen-llm-multimodality.md`](docs/research/frozen-llm-multimodality.md) — frozen backbone + adapter vs. end-to-end multimodal giants
@@ -231,7 +234,7 @@ Two surfaces, one contract. Adding a modality takes six steps on either side. Se
 ## Install
 
 ```bash
-git clone https://github.com/Moapacha/wittgenstein.git
+git clone https://github.com/wittgenstein-cli/wittgenstein.git
 cd wittgenstein
 
 # TypeScript harness
@@ -264,12 +267,12 @@ These are intentionally unfinished. They're part of the current release so the c
 is visible, but **do not depend on them in production** until the status matrix says
 ✅ Ships.
 
-| Surface | State | What works today | What's missing |
-|---|---|---|---|
-| TS `codec-image` adapter + decoder | ⚠️ Partial | Scene JSON, placeholder latents, MLP loader, `renderSky` / `renderTerrain` primitives | Frozen VQ decoder bridge (LlamaGen / SEED); trained adapter weights |
-| TS `codec-video` | 🔴 Stub | Schema + typed interface | HyperFrames integration, MP4 encoder |
-| Benchmark quality scores | ⚠️ Proxy | Structural smoke checks, cost/latency timing | CLIPScore, Whisper WER, UTMOS, discriminative score runners |
-| `polyglot-mini` image code-as-painter sandbox | ⚠️ Research-grade | `subprocess` with 20 s timeout + safe globals | Kernel-level isolation for multi-tenant use (see [`SECURITY.md`](SECURITY.md)) |
+| Surface                                       | State             | What works today                                                                      | What's missing                                                                 |
+| --------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| TS `codec-image` adapter + decoder            | ⚠️ Partial        | Scene JSON, placeholder latents, MLP loader, `renderSky` / `renderTerrain` primitives | Frozen VQ decoder bridge (LlamaGen / SEED); trained adapter weights            |
+| TS `codec-video`                              | 🔴 Stub           | Schema + typed interface                                                              | HyperFrames integration, MP4 encoder                                           |
+| Benchmark quality scores                      | ⚠️ Proxy          | Structural smoke checks, cost/latency timing                                          | CLIPScore, Whisper WER, UTMOS, discriminative score runners                    |
+| `polyglot-mini` image code-as-painter sandbox | ⚠️ Research-grade | `subprocess` with 20 s timeout + safe globals                                         | Kernel-level isolation for multi-tenant use (see [`SECURITY.md`](SECURITY.md)) |
 
 If you hit a rough edge in one of these, file an
 [Experimental feedback issue](.github/ISSUE_TEMPLATE/experimental-feedback.md) — that's
@@ -285,7 +288,7 @@ land softly. Three paths, in order of effort:
 1. **Try the 30-second quickstart above and tell us how it felt.** Broken step? Confusing
    docs? File a [`[q]` question](.github/ISSUE_TEMPLATE/question.md) or a docs PR — we
    treat "should have been documented" as the same priority as a bug.
-2. **Pick a `good first issue` on [GitHub Issues](https://github.com/Moapacha/wittgenstein/issues).**
+2. **Pick a `good first issue` on [GitHub Issues](https://github.com/wittgenstein-cli/wittgenstein/issues).**
    Labelled entries are scoped small. Docs, CI, and typings are all fair game.
 3. **Own a surface.** If you want to land the VQ decoder bridge, train a better adapter,
    or port a codec, say so in an issue and we'll pair. See
@@ -310,8 +313,8 @@ Questions before you start? [`SUPPORT.md`](SUPPORT.md) shows where to ask what.
 
 ## Contributors
 
-<a href="https://github.com/Moapacha/wittgenstein/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Moapacha/wittgenstein" alt="Image with all contributors" />
+<a href="https://github.com/wittgenstein-cli/wittgenstein/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=wittgenstein-cli/wittgenstein" alt="Image with all contributors" />
 </a>
 
 ---
@@ -319,9 +322,9 @@ Questions before you start? [`SUPPORT.md`](SUPPORT.md) shows where to ask what.
 ## Star History
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=Moapacha/wittgenstein&type=Date&theme=dark" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=Moapacha/wittgenstein&type=Date" />
-  <img alt="Star History Chart" src="https://api.star-history.com/image?repos=Moapacha/wittgenstein&type=Date" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=wittgenstein-cli/wittgenstein&type=Date&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=wittgenstein-cli/wittgenstein&type=Date" />
+  <img alt="Star History Chart" src="https://api.star-history.com/image?repos=wittgenstein-cli/wittgenstein&type=Date" />
 </picture>
 
 ---

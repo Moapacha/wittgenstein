@@ -3,7 +3,7 @@
 **Date:** 2026-04-23
 **Author:** research (max.zhuang.yan@gmail.com)
 **Status:** Draft v0.1
-**Summary:** Picks the smallest set of real (non-structural) quality metrics per modality that Wittgenstein can actually run locally and reproducibly without breaking the Latency / Price / Quality contract — one default-tier metric per modality, one heavy-tier fallback, composite lifted off the structural floor. Verdict tease: VQAScore for image, UTMOS for speech, librosa-BPM + key for music, CLAP for soundscape, NeuroKit2 rule-set for ECG, derivative-bound rules for gyro/temperature, CLIP-temporal for video, and a single `[0,1] → mean` composite with a hard "API-break-is-a-fail" rule.
+**Summary:** Picks the smallest set of real (non-structural) quality metrics per modality that Wittgenstein can actually run locally and reproducibly without breaking the Latency / Price / Quality contract. For v0.2 the shipping target is a **default tier only**; heavier metrics remain a documented v0.3+ reservation, not a CLI promise.
 
 ---
 
@@ -119,9 +119,8 @@ Rule: each per-modality metric is normalized to [0, 1] by a documented transform
 Invariant: **no modality can silently drop because its API broke.** If a metric fails to compute — model download failed, import error, OOM, whatever — the harness emits an explicit `null` score for that modality, marks the run as `quality_partial`, and the composite is _not_ computed. A run with missing quality data does not get a quality number. The CLI surface is:
 
 ```
-pnpm benchmark --quality=off         # structural only (today's behavior, default for CI pre-commit)
-pnpm benchmark --quality              # default-tier metrics from this brief
-pnpm benchmark --quality=heavy        # adds VQAScore-large, DNSMOS, CLAP-music, InternVideo2
+pnpm benchmark --quality=off   # structural only (today's behavior, default for CI pre-commit)
+pnpm benchmark --quality       # default-tier metrics from this brief
 ```
 
 The default-tier models together are under ~1.5 GB (UTMOS wav2vec2 ~360 MB + VQAScore small ~500 MB + CLAP ~600 MB + librosa/NeuroKit2 zero). The heavy tier adds ~3 GB. Both sit under an explicit `benchmarks/tools/` directory with pinned checksums.
@@ -150,24 +149,24 @@ A softer kill: **if the composite never moves** across a month of adapter iterat
 
 ## Verdict
 
-| Modality | Current proxy | v2 metric | Library / source | Model size | Upgrade tier |
-|---|---|---|---|---|---|
-| Image (SVG / ASCII-PNG / raster) | PNG valid + dims + pixel variance > 100 | VQAScore (P(yes) on "Does this figure show '{text}'?") | `linzhiqiu/t2v_metrics` (arXiv:2404.01291) | ~500 MB (small) / ~3 GB (CLIP-FlanT5-XL) | default / heavy |
-| Image cheap fallback | — | CLIPScore | `jmhessel/clipscore` (arXiv:2104.08718) | ~150 MB (OpenCLIP ViT-B/32) | default fallback |
-| Speech / voice | WAV valid + duration + RMS | UTMOS | `speechmos` / `sarulab-speech/UTMOSv2` (arXiv:2204.02152) | ~360 MB | default |
-| Speech gate | — | Whisper-WER round-trip | `openai-whisper` (arXiv:2212.04356) | ~140 MB (base) | default gate |
-| Speech diagnostic | — | DNSMOS P.835 (SIG / BAK / OVRL) | `microsoft/DNS-Challenge` (arXiv:2110.01763) | ~80 MB | heavy |
-| Music | WAV valid + duration + RMS | librosa BPM accuracy + key accuracy | `librosa` (DSP, no model) | 0 | default |
-| Music heavy | — | CLAP text-audio cosine | `laion/clap-htsat-unfused` (arXiv:2211.06687) | ~600 MB | heavy |
-| Soundscape | WAV valid + duration + RMS | CLAP text-audio cosine | `laion/clap-htsat-unfused` | ~600 MB | default |
-| Soundscape diagnostic | — | PANNs top-k tag retrieval | `qiuqiangkong/audioset_tagging_cnn` (arXiv:1912.10211) | ~320 MB (CNN14) | heavy |
-| Sensor / ECG | JSON+CSV + sample count + mean-in-range | HR / QRS / PR / SQI rule set | `NeuroKit2` ecg module | 0 | default |
-| Sensor / gyro | JSON+CSV + sample count | range + derivative + unit rules | NumPy | 0 | default |
-| Sensor / temperature | JSON+CSV + sample count | envelope + derivative rules | NumPy | 0 | default |
-| Video | (pending MP4) structural only | `clip-frame-drift` (frame-wise CLIPScore mean − std) | `open_clip_torch` | ~150 MB | default |
-| Video heavy | — | InternVideo2 text-video similarity | `InternVideo2` (arXiv:2403.15377) | ~1 GB | heavy |
+| Modality                         | Current proxy                           | v2 metric                                              | Library / source                                          | Model size                               | Upgrade tier     |
+| -------------------------------- | --------------------------------------- | ------------------------------------------------------ | --------------------------------------------------------- | ---------------------------------------- | ---------------- |
+| Image (SVG / ASCII-PNG / raster) | PNG valid + dims + pixel variance > 100 | VQAScore (P(yes) on "Does this figure show '{text}'?") | `linzhiqiu/t2v_metrics` (arXiv:2404.01291)                | ~500 MB (small) / ~3 GB (CLIP-FlanT5-XL) | default / heavy  |
+| Image cheap fallback             | —                                       | CLIPScore                                              | `jmhessel/clipscore` (arXiv:2104.08718)                   | ~150 MB (OpenCLIP ViT-B/32)              | default fallback |
+| Speech / voice                   | WAV valid + duration + RMS              | UTMOS                                                  | `speechmos` / `sarulab-speech/UTMOSv2` (arXiv:2204.02152) | ~360 MB                                  | default          |
+| Speech gate                      | —                                       | Whisper-WER round-trip                                 | `openai-whisper` (arXiv:2212.04356)                       | ~140 MB (base)                           | default gate     |
+| Speech diagnostic                | —                                       | DNSMOS P.835 (SIG / BAK / OVRL)                        | `microsoft/DNS-Challenge` (arXiv:2110.01763)              | ~80 MB                                   | heavy            |
+| Music                            | WAV valid + duration + RMS              | librosa BPM accuracy + key accuracy                    | `librosa` (DSP, no model)                                 | 0                                        | default          |
+| Music heavy                      | —                                       | CLAP text-audio cosine                                 | `laion/clap-htsat-unfused` (arXiv:2211.06687)             | ~600 MB                                  | heavy            |
+| Soundscape                       | WAV valid + duration + RMS              | CLAP text-audio cosine                                 | `laion/clap-htsat-unfused`                                | ~600 MB                                  | default          |
+| Soundscape diagnostic            | —                                       | PANNs top-k tag retrieval                              | `qiuqiangkong/audioset_tagging_cnn` (arXiv:1912.10211)    | ~320 MB (CNN14)                          | heavy            |
+| Sensor / ECG                     | JSON+CSV + sample count + mean-in-range | HR / QRS / PR / SQI rule set                           | `NeuroKit2` ecg module                                    | 0                                        | default          |
+| Sensor / gyro                    | JSON+CSV + sample count                 | range + derivative + unit rules                        | NumPy                                                     | 0                                        | default          |
+| Sensor / temperature             | JSON+CSV + sample count                 | envelope + derivative rules                            | NumPy                                                     | 0                                        | default          |
+| Video                            | (pending MP4) structural only           | `clip-frame-drift` (frame-wise CLIPScore mean − std)   | `open_clip_torch`                                         | ~150 MB                                  | default          |
+| Video heavy                      | —                                       | InternVideo2 text-video similarity                     | `InternVideo2` (arXiv:2403.15377)                         | ~1 GB                                    | heavy            |
 
-Upgrade order, cheapest-to-land first. Ship the NumPy-only metrics first: NeuroKit2 for ECG, gyro rules, temperature rules, librosa BPM + key for music. These are four PRs totalling maybe 200 lines of code, zero new model downloads, and they immediately lift four modalities off the structural floor. Second, add CLAP for soundscape; it is the one place where the heavy model pays its weight as a default. Third, add UTMOS + Whisper-WER for speech; this is where the speech route quality number becomes meaningful for the first time. Fourth, add VQAScore for image with CLIPScore as the documented fallback; this is the highest-stakes metric in the set because image is the highest-variance modality in the showcase. Fifth, wire `clip-frame-drift` for video once the MP4 renderer lands. Finally, gate DNSMOS, PANNs, CLAP-music, VQAScore-XL, and InternVideo2 behind `--quality=heavy` and document them in `docs/benchmark-standards.md`. Everything lands in the default tier under ~1.5 GB of model weights and under ~5 s per artifact on CPU. — research, 2026-04-23.
+Upgrade order, cheapest-to-land first. Ship the NumPy-only metrics first: NeuroKit2 for ECG, gyro rules, temperature rules, librosa BPM + key for music. These are four PRs totalling maybe 200 lines of code, zero new model downloads, and they immediately lift four modalities off the structural floor. Second, add CLAP for soundscape; it is the one place where the heavier model pays its weight as a default. Third, add UTMOS + Whisper-WER for speech; this is where the speech route quality number becomes meaningful for the first time. Fourth, add VQAScore for image with CLIPScore as the documented fallback; this is the highest-stakes metric in the set because image is the highest-variance modality in the showcase. Fifth, wire `clip-frame-drift` for video once the MP4 renderer lands. Heavy-tier additions (DNSMOS, PANNs, CLAP-music, VQAScore-XL, InternVideo2) stay documented as a **v0.3+ reservation**, not a v0.2 requirement. Everything that ships in v0.2 must fit under the default tier only. — research, 2026-04-23.
 
 ## References
 

@@ -4,15 +4,15 @@ First-pass research briefs produced under **Phase P2** of the v0.2 Restructuring
 
 ## Brief index
 
-| ID  | Title                                                                          | Question                                                                             | Status         |
-| --- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | -------------- |
-| A   | [VQ / VLM lineage 2026 refresh](A_vq_vlm_lineage_audit.md)                     | Does the VQ-token / frozen-decoder path still look like the right bet in April 2026? | 🟡 Draft v0.1  |
-| B   | [Compression vs world models — Ilya ↔ LeCun](B_compression_vs_world_models.md) | Where does Wittgenstein stand on the Ilya/LeCun tension? _(critical-path brief)_     | 🟡 Draft v0.1  |
-| C   | [Unproven-but-interesting horizon scan](C_unproven_horizon.md)                 | Which 6–8 unvalidated hypotheses should shape the 18-month roadmap?                  | 🟡 Draft v0.1  |
-| D   | [CLI / SDK / harness conventions](D_cli_and_sdk_conventions.md)                | How do modern AI CLIs and SDKs look; where is Wittgenstein off the grid?             | 🟡 Draft v0.1  |
-| E   | [Per-modality quality benchmarks](E_benchmarks_v2.md)                          | What's the smallest set of real (non-structural) quality metrics per modality?       | 🟡 Draft v0.1  |
-| F   | [Site ↔ repo reconciliation](F_site_reconciliation.md)                         | Which `wittgenstein.wtf` claims contradict v0.1.0-alpha.2?                           | 🟡 Draft v0.1  |
-| G   | [Image-network clues](G_image_network_clues.md)                                | Which decoder / data / packaging form ships for `codec-image` at exec-plan M1?       | 🔴 Stub        |
+| ID  | Title                                                                          | Question                                                                             | Status        |
+| --- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------- |
+| A   | [VQ / VLM lineage 2026 refresh](A_vq_vlm_lineage_audit.md)                     | Does the VQ-token / frozen-decoder path still look like the right bet in April 2026? | 🟡 Draft v0.1 |
+| B   | [Compression vs world models — Ilya ↔ LeCun](B_compression_vs_world_models.md) | Where does Wittgenstein stand on the Ilya/LeCun tension? _(critical-path brief)_     | 🟡 Draft v0.1 |
+| C   | [Unproven-but-interesting horizon scan](C_unproven_horizon.md)                 | Which 6–8 unvalidated hypotheses should shape the 18-month roadmap?                  | 🟡 Draft v0.1 |
+| D   | [CLI / SDK / harness conventions](D_cli_and_sdk_conventions.md)                | How do modern AI CLIs and SDKs look; where is Wittgenstein off the grid?             | 🟡 Draft v0.1 |
+| E   | [Per-modality quality benchmarks](E_benchmarks_v2.md)                          | What's the smallest set of real (non-structural) quality metrics per modality?       | 🟡 Draft v0.1 |
+| F   | [Site ↔ repo reconciliation](F_site_reconciliation.md)                         | Which `wittgenstein.wtf` claims contradict v0.1.0-alpha.2?                           | 🟡 Draft v0.1 |
+| G   | [Image-network clues](G_image_network_clues.md)                                | Which decoder / data / packaging form ships for `codec-image` at exec-plan M1?       | 🔴 Stub       |
 
 ## Where briefs land (map)
 
@@ -64,6 +64,7 @@ If either hat dissents, the brief iterates; otherwise the verdict lands in an AD
 - `docs/inheritance-audit.md` — Keep/Promote/Revise/Retire table (lands in PR #6)
 - `docs/rfcs/` — engineering decisions that ratify brief verdicts
 - `docs/adrs/` — permanent record of accepted verdicts
+- `docs/agent-guides/` — prompt-ready recipes for phase-specific implementation work
 
 If `docs/THESIS.md` and `docs/inheritance-audit.md` are not present in your checkout yet,
 merge PR #6 first, then treat this folder as Phase P2.

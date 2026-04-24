@@ -8,7 +8,7 @@
 ## Purpose
 
 This is the execution plan for the code port ratified by ADR-0008. It is deliberately
-*outside* the docs-phase sequence P1–P5: the restructuring phases lock decisions; this
+_outside_ the docs-phase sequence P1–P5: the restructuring phases lock decisions; this
 plan lands the migration.
 
 Scope: port Wittgenstein's existing 7 modality groups from the v0.1 harness surface to
@@ -29,14 +29,15 @@ land as confirmations, not discoveries.
 
 ## Phase ordering
 
-| Phase | Work | Gate |
-|---|---|---|
-| M0 | Introduce `Codec<Req, Art>`, `IR`, `Route`, `HarnessCtx` types in `packages/schemas` behind an `@experimental` tag. No call-site change. | Types land; `pnpm typecheck` green. |
-| M1 | Port `codec-image` (svg, ascii-png, raster) first — only modality with both L4 adapter slot and non-trivial L5, so it stresses the protocol hardest. Default pipeline stays one LLM round (schema-in-preamble). `--expand` flag opts into a round-1 expansion pass for A/B comparison. | Goldens preserve; manifest rows codec-authored; round-trip test ≤20 lines; Brief A's "LFQ-family discrete-token decoder" rename lands in ADR-0005 addendum. |
-| M2 | Port `codec-audio` (speech, soundscape, music) — eliminates the 80-line route copy-paste. | Goldens preserve; `AudioRequest.route` deprecated with warning. |
-| M3 | Port `codec-sensor` (ecg, gyro, temperature) — confirmation case (no L4), closes the modality sweep. | Goldens preserve; `SensorRequest` surface unchanged from user side. |
-| M4 | Retire `harness.ts:123-172` modality branching + `:139-172` manifest overrides. Remove `AudioRequest.route`, `SvgRequest.source`, `AsciipngRequest.source`, `VideoRequest.inlineSvgs`. | Harness is modality-blind; `codec-video` (🔴 stub) awaits its own M-slot. |
-| M5 | Land benchmarks v2 bridge (Brief E): VQAScore / UTMOS+WER / librosa / LAION-CLAP / NeuroKit2 / rule lists / clip-frame-drift, default tier only. `--quality=heavy` remains opt-in. | Composite Quality score reports; `quality_partial` invariant enforced. |
+| Phase | Work                                                                                                                                                                                                                                                                                   | Gate                                                                                                                                                        |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M0    | Introduce `Codec<Req, Art>`, `IR`, `Route`, `HarnessCtx` types in `packages/schemas` behind an `@experimental` tag. No call-site change.                                                                                                                                               | Types land; `pnpm typecheck` green.                                                                                                                         |
+| M1    | Port `codec-image` (svg, ascii-png, raster) first — only modality with both L4 adapter slot and non-trivial L5, so it stresses the protocol hardest. Default pipeline stays one LLM round (schema-in-preamble). `--expand` flag opts into a round-1 expansion pass for A/B comparison. | Goldens preserve; manifest rows codec-authored; round-trip test ≤20 lines; Brief A's "LFQ-family discrete-token decoder" rename lands in ADR-0005 addendum. |
+| M2    | Port `codec-audio` (speech, soundscape, music) — eliminates the 80-line route copy-paste.                                                                                                                                                                                              | Goldens preserve; `AudioRequest.route` deprecated with warning.                                                                                             |
+| M3    | Port `codec-sensor` (ecg, gyro, temperature) — confirmation case (no L4), closes the modality sweep.                                                                                                                                                                                   | Goldens preserve; `SensorRequest` surface unchanged from user side.                                                                                         |
+| M4    | Retire `harness.ts:123-172` modality branching + `:139-172` manifest overrides. Remove `AudioRequest.route`, `SvgRequest.source`, `AsciipngRequest.source`, `VideoRequest.inlineSvgs`.                                                                                                 | Harness is modality-blind; `codec-video` (🔴 stub) awaits its own M-slot.                                                                                   |
+| M5a   | Land image benchmark bridge first (Brief E): VQAScore + CLIPScore fallback, wired into the default tier only.                                                                                                                                                                          | Image metric runs locally; `quality_partial` invariant enforced.                                                                                            |
+| M5b   | Land audio + sensor + video benchmark bridge next: UTMOS+WER / librosa / LAION-CLAP / NeuroKit2 / rule lists / clip-frame-drift, still default tier only.                                                                                                                              | Non-image metrics wired after M1–M4 are stable.                                                                                                             |
 
 Kill date for pre-v2 surface: **v0.3.0**. Post v0.3.0 the old interfaces are compile
 errors, not deprecation warnings.

@@ -6,7 +6,7 @@ This document is the smallest, most-linked page in the repo. Everything else —
 
 ## Master statement (locked)
 
-Wittgenstein is the modality harness for text-first LLMs. It assumes the frontier model is, and will remain, a text-native planner. Modality capability — image, audio, video, sensor, … — is added *outside* the model, through a portable harness layer that the model does not need to be retrained to use.
+Wittgenstein is the modality harness for text-first LLMs. It assumes the frontier model is, and will remain, a text-native planner. Modality capability — image, audio, video, sensor, … — is added _outside_ the model, through a portable harness layer that the model does not need to be retrained to use.
 
 ## Extension form (locked wording; phrasing may evolve)
 
@@ -22,7 +22,7 @@ The five-layer foundation stands:
 - **L4 Optional adapter** — small learned translators (e.g. scene-to-latent bridges), shipped beside codecs, not inside the base model.
 - **L5 Packaging** — CLI, installation, shared schemas, docs, agent primers, distribution conventions.
 
-What evolves is *generality* (L4/L5 discipline must carry across **all** modalities, not only image) and *naming* (deliberate pass, not back-filled).
+What evolves is _generality_ (L4/L5 discipline must carry across **all** modalities, not only image), not the locked vocabulary.
 
 ## Reproducibility bet (locked)
 
@@ -37,12 +37,10 @@ Every artifact ships with a `RunManifest`: git SHA, lockfile hash, seed, LLM inp
 
 ## What is explicitly open (revisit by RFC)
 
-- Naming of the middleware layer (informal "Parasoid" is not binding).
-- Pipeline shape — one LLM round vs two (expansion then schema).
 - Per-modality quality benchmarks beyond structural proxies.
 - CLI ergonomics relative to `openai` / `kimi` / `gh` conventions.
 - Public website ↔ repo reconciliation.
-- Position on the Ilya (compression) ↔ LeCun (JEPA / world models) tension — open until the first research brief lands.
+- Position on the Ilya (compression) ↔ LeCun (JEPA / world models) tension in later implementation and benchmark doctrine.
 
 ## Change policy
 
@@ -50,4 +48,4 @@ This page changes only through an ADR. Prose tweaks to phrasing are fine; alteri
 
 ---
 
-**Dated:** 2026-04-23. **Next review:** after Phase P2 research briefs land.
+**Dated:** 2026-04-23. **Next review:** after the v0.2 doctrine lock and before major execution work lands.

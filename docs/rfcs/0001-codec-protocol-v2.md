@@ -2,11 +2,11 @@
 
 **Date:** 2026-04-25
 **Author:** engineering (max.zhuang.yan@gmail.com)
-**Status:** 🟡 Draft v0.1
+**Status:** 🟢 Accepted
 **Feeds from:** Brief A (VQ / VLM lineage audit, 2026-04-23), Brief B (Compression vs. World Models — Ilya↔LeCun verdict: Position iii Layered + iv Agnostic contract), Brief C (Unproven horizon hypotheses H1 / H4 / H7), v0.2 action plan code-smell inventory.
-**Ratified by:** ADR-0008 (pending)
+**Ratified by:** ADR-0008
 
-**Summary:** Collapse the per-modality branching in `harness.ts` into one `Codec<Req, Art>` primitive whose IR is a `Text | Latent | Hybrid` sum type, whose strategy lives in codec-declared metadata, whose adapter (L4) and packaging (L5) stages are mandatory seams for every modality, and which authors its own manifest rows — with a two-round LLM call (NL expansion, then schema-constrained JSON) as the default `expand → adapt → decode → package` pipeline.
+**Summary:** Collapse the per-modality branching in `harness.ts` into one `Codec<Req, Art>` primitive whose IR is a `Text | Latent | Hybrid` sum type, whose strategy lives in codec-declared metadata, whose adapter (L4) and packaging (L5) stages are mandatory seams for every modality, and which authors its own manifest rows — with a one-round LLM call as the default `expand → adapt → decode → package` pipeline and two-round expansion preserved as an opt-in evaluation path.
 
 ---
 
@@ -62,12 +62,12 @@ export type IR =
   | { kind: "Latent"; latent: Float32Array; shape: number[] }
   | { kind: "Hybrid"; text: string; latent?: Float32Array; shape?: number[] };
 
-export const isText  = (ir: IR): ir is Extract<IR, { kind: "Text" }>   => ir.kind === "Text";
-export const isLatent= (ir: IR): ir is Extract<IR, { kind: "Latent" }> => ir.kind === "Latent";
-export const isHybrid= (ir: IR): ir is Extract<IR, { kind: "Hybrid" }> => ir.kind === "Hybrid";
+export const isText = (ir: IR): ir is Extract<IR, { kind: "Text" }> => ir.kind === "Text";
+export const isLatent = (ir: IR): ir is Extract<IR, { kind: "Latent" }> => ir.kind === "Latent";
+export const isHybrid = (ir: IR): ir is Extract<IR, { kind: "Hybrid" }> => ir.kind === "Hybrid";
 ```
 
-Only `Text` is inhabited in v0.3. `Latent` and `Hybrid` are defined so adapters and decoders can pattern-match exhaustively (the TypeScript compiler enforces `never` in the default branch), which means the day a `Latent` codec ships, every existing codec's adapter must either handle it or explicitly reject it. That is the point.
+Only `Text` is inhabited at v0.2. `Latent` is a reserved slot for Brief B's JEPA contingency; `Hybrid` is an escape hatch, not a promise of imminent implementation. Neither has runtime code today. `Latent` and `Hybrid` are defined so adapters and decoders can pattern-match exhaustively (the TypeScript compiler enforces `never` in the default branch), which means the day a `Latent` codec ships, every existing codec's adapter must either handle it or explicitly reject it. Adding a new inhabited variant requires an ADR.
 
 ### The Codec interface
 
@@ -75,9 +75,13 @@ Only `Text` is inhabited in v0.3. `Latent` and `Hybrid` are defined so adapters 
 // packages/core/src/codec/v2/codec.ts
 
 export type Modality =
-  | "image-svg" | "image-ascii-png"
-  | "audio-speech" | "audio-soundscape" | "audio-music"
-  | "video" | "sensor";
+  | "image-svg"
+  | "image-ascii-png"
+  | "audio-speech"
+  | "audio-soundscape"
+  | "audio-music"
+  | "video"
+  | "sensor";
 
 export interface Route<Req> {
   id: string;
@@ -104,10 +108,10 @@ export interface Codec<Req, Art> {
 export interface HarnessCtx {
   seed: number;
   logger: Logger;
-  cache: Cache;         // round-1 LLM cache lives here
-  llm: LlmClient;       // model-agnostic; modality-unaware
-  tmpDir: string;       // per-invocation scratch for L4/L5 intermediates
-  clock: Clock;         // injected for deterministic tests
+  cache: Cache; // round-1 LLM cache lives here
+  llm: LlmClient; // model-agnostic; modality-unaware
+  tmpDir: string; // per-invocation scratch for L4/L5 intermediates
+  clock: Clock; // injected for deterministic tests
 }
 ```
 
@@ -173,18 +177,25 @@ Each group must fit in ≤20 lines of pseudo-code showing the `Codec` wiring and
 
 ```ts
 class SvgCodec implements Codec<SvgRequest, SvgArtifact> {
-  id = "codec-image-svg"; modality = "image-svg" as const;
+  id = "codec-image-svg";
+  modality = "image-svg" as const;
   routes = [
-    { id: "inline",  match: r => r.hints?.preferSource === "inline", cost: { latencyMs: 400,  priceUsd: 0.002 }},
-    { id: "adapter", match: _ => true,                                 cost: { latencyMs: 1800, priceUsd: 0.012 }},
+    {
+      id: "inline",
+      match: (r) => r.hints?.preferSource === "inline",
+      cost: { latencyMs: 400, priceUsd: 0.002 },
+    },
+    { id: "adapter", match: (_) => true, cost: { latencyMs: 1800, priceUsd: 0.012 } },
   ];
   async produce(req, ctx) {
-    const ir    = await this.expand(req, ctx);           // Text IR
-    const plan  = await this.adapt(ir, ctx);             // L4: symbol plan → LFQ token ids
-    const bytes = await this.decode(plan, ctx);          // L5: frozen LFQ decoder → SVG
+    const ir = await this.expand(req, ctx); // Text IR
+    const plan = await this.adapt(ir, ctx); // L4: symbol plan → LFQ token ids
+    const bytes = await this.decode(plan, ctx); // L5: frozen LFQ decoder → SVG
     return this.pkg(bytes, req, this.pickRoute(req), ctx);
   }
-  manifestRows(a) { return [row("L4", a.adapterHash), row("L5", a.decoderHash, { frozen: true })]; }
+  manifestRows(a) {
+    return [row("L4", a.adapterHash), row("L5", a.decoderHash, { frozen: true })];
+  }
 }
 ```
 
@@ -192,15 +203,18 @@ class SvgCodec implements Codec<SvgRequest, SvgArtifact> {
 
 ```ts
 class AsciiPngCodec implements Codec<AsciiPngRequest, PngArtifact> {
-  id = "codec-image-ascii-png"; modality = "image-ascii-png" as const;
-  routes = [{ id: "adapter", match: _ => true, cost: { latencyMs: 900, priceUsd: 0.004 }}];
+  id = "codec-image-ascii-png";
+  modality = "image-ascii-png" as const;
+  routes = [{ id: "adapter", match: (_) => true, cost: { latencyMs: 900, priceUsd: 0.004 } }];
   async produce(req, ctx) {
-    const ir   = await this.expand(req, ctx);            // Text (ASCII grid description)
-    const grid = await this.adapt(ir, ctx);              // L4: grid planner
-    const png  = await this.decode(grid, ctx);           // L5: grid rasterizer (frozen)
+    const ir = await this.expand(req, ctx); // Text (ASCII grid description)
+    const grid = await this.adapt(ir, ctx); // L4: grid planner
+    const png = await this.decode(grid, ctx); // L5: grid rasterizer (frozen)
     return this.pkg(png, req, this.routes[0], ctx);
   }
-  manifestRows(a) { return [row("L4", a.gridHash), row("L5", a.rasterHash, { frozen: true })]; }
+  manifestRows(a) {
+    return [row("L4", a.gridHash), row("L5", a.rasterHash, { frozen: true })];
+  }
 }
 ```
 
@@ -208,15 +222,18 @@ class AsciiPngCodec implements Codec<AsciiPngRequest, PngArtifact> {
 
 ```ts
 class SpeechCodec implements Codec<SpeechRequest, AudioArtifact> {
-  id = "codec-audio-speech"; modality = "audio-speech" as const;
-  routes = [{ id: "tts", match: _ => true, cost: { latencyMs: 2200, priceUsd: 0.008 }}];
+  id = "codec-audio-speech";
+  modality = "audio-speech" as const;
+  routes = [{ id: "tts", match: (_) => true, cost: { latencyMs: 2200, priceUsd: 0.008 } }];
   async produce(req, ctx) {
-    const ir    = await this.expand(req, ctx);           // Text: SSML-ish transcript
-    const plan  = await this.adapt(ir, ctx);             // L4: prosody/voice plan
-    const wav   = await this.decode(plan, ctx);          // L5: frozen neural TTS decoder
+    const ir = await this.expand(req, ctx); // Text: SSML-ish transcript
+    const plan = await this.adapt(ir, ctx); // L4: prosody/voice plan
+    const wav = await this.decode(plan, ctx); // L5: frozen neural TTS decoder
     return this.pkg(wav, req, this.routes[0], ctx);
   }
-  manifestRows(a) { return [row("L4", a.prosodyHash), row("L5", a.ttsModelHash, { frozen: true })]; }
+  manifestRows(a) {
+    return [row("L4", a.prosodyHash), row("L5", a.ttsModelHash, { frozen: true })];
+  }
 }
 ```
 
@@ -224,15 +241,18 @@ class SpeechCodec implements Codec<SpeechRequest, AudioArtifact> {
 
 ```ts
 class SoundscapeCodec implements Codec<SoundscapeRequest, AudioArtifact> {
-  id = "codec-audio-soundscape"; modality = "audio-soundscape" as const;
-  routes = [{ id: "layered", match: _ => true, cost: { latencyMs: 3500, priceUsd: 0.011 }}];
+  id = "codec-audio-soundscape";
+  modality = "audio-soundscape" as const;
+  routes = [{ id: "layered", match: (_) => true, cost: { latencyMs: 3500, priceUsd: 0.011 } }];
   async produce(req, ctx) {
-    const ir    = await this.expand(req, ctx);           // Text: scene graph of layers
-    const plan  = await this.adapt(ir, ctx);             // L4: layer-to-sample-lib mapping
-    const wav   = await this.decode(plan, ctx);          // L5: deterministic mixer (frozen)
+    const ir = await this.expand(req, ctx); // Text: scene graph of layers
+    const plan = await this.adapt(ir, ctx); // L4: layer-to-sample-lib mapping
+    const wav = await this.decode(plan, ctx); // L5: deterministic mixer (frozen)
     return this.pkg(wav, req, this.routes[0], ctx);
   }
-  manifestRows(a) { return [row("L4", a.mapHash), row("L5", a.mixerHash, { frozen: true })]; }
+  manifestRows(a) {
+    return [row("L4", a.mapHash), row("L5", a.mixerHash, { frozen: true })];
+  }
 }
 ```
 
@@ -240,16 +260,25 @@ class SoundscapeCodec implements Codec<SoundscapeRequest, AudioArtifact> {
 
 ```ts
 class MusicCodec implements Codec<MusicRequest, AudioArtifact> {
-  id = "codec-audio-music"; modality = "audio-music" as const;
-  routes = [{ id: "midi",     match: r => r.hints?.format === "midi", cost: { latencyMs: 1400, priceUsd: 0.006 }},
-            { id: "rendered", match: _ => true,                         cost: { latencyMs: 4800, priceUsd: 0.019 }}];
+  id = "codec-audio-music";
+  modality = "audio-music" as const;
+  routes = [
+    {
+      id: "midi",
+      match: (r) => r.hints?.format === "midi",
+      cost: { latencyMs: 1400, priceUsd: 0.006 },
+    },
+    { id: "rendered", match: (_) => true, cost: { latencyMs: 4800, priceUsd: 0.019 } },
+  ];
   async produce(req, ctx) {
-    const ir    = await this.expand(req, ctx);           // Text: lead sheet / chord chart
-    const score = await this.adapt(ir, ctx);             // L4: LLM text → MIDI events
-    const out   = await this.decode(score, ctx);         // L5: soundfont renderer (frozen)
+    const ir = await this.expand(req, ctx); // Text: lead sheet / chord chart
+    const score = await this.adapt(ir, ctx); // L4: LLM text → MIDI events
+    const out = await this.decode(score, ctx); // L5: soundfont renderer (frozen)
     return this.pkg(out, req, this.pickRoute(req), ctx);
   }
-  manifestRows(a) { return [row("L4", a.scoreHash), row("L5", a.soundfontHash, { frozen: true })]; }
+  manifestRows(a) {
+    return [row("L4", a.scoreHash), row("L5", a.soundfontHash, { frozen: true })];
+  }
 }
 ```
 
@@ -257,18 +286,21 @@ class MusicCodec implements Codec<MusicRequest, AudioArtifact> {
 
 ```ts
 class VideoCodec implements Codec<VideoRequest, VideoArtifact> {
-  id = "codec-video"; modality = "video" as const;
-  routes = [{ id: "svg-anim", match: _ => true, cost: { latencyMs: 9000, priceUsd: 0.040 }}];
+  id = "codec-video";
+  modality = "video" as const;
+  routes = [{ id: "svg-anim", match: (_) => true, cost: { latencyMs: 9000, priceUsd: 0.04 } }];
   async produce(req, ctx) {
-    const ir     = await this.expand(req, ctx);          // Text: storyboard + per-frame SVG plan
-    const frames = await this.adapt(ir, ctx);            // L4: SVG-per-frame generation (delegates to SvgCodec)
-    const mp4    = await this.decode(frames, ctx);       // L5: SVG-rasterize → ffmpeg mux (frozen)
+    const ir = await this.expand(req, ctx); // Text: storyboard + per-frame SVG plan
+    const frames = await this.adapt(ir, ctx); // L4: SVG-per-frame generation (delegates to SvgCodec)
+    const mp4 = await this.decode(frames, ctx); // L5: SVG-rasterize → ffmpeg mux (frozen)
     return this.pkg(mp4, req, this.routes[0], ctx);
   }
   manifestRows(a) {
-    return [row("L4", a.storyboardHash),
-            ...a.frameHashes.map((h, i) => row("L4.frame", h, { index: i })),
-            row("L5", a.muxHash, { frozen: true })];
+    return [
+      row("L4", a.storyboardHash),
+      ...a.frameHashes.map((h, i) => row("L4.frame", h, { index: i })),
+      row("L5", a.muxHash, { frozen: true }),
+    ];
   }
 }
 ```
@@ -279,15 +311,18 @@ Note: `inlineSvgs` was a request-schema flag. It is gone. The storyboard IR cont
 
 ```ts
 class SensorCodec implements Codec<SensorRequest, SensorArtifact> {
-  id = "codec-sensor"; modality = "sensor" as const;
-  routes = [{ id: "synth", match: _ => true, cost: { latencyMs: 200, priceUsd: 0.001 }}];
+  id = "codec-sensor";
+  modality = "sensor" as const;
+  routes = [{ id: "synth", match: (_) => true, cost: { latencyMs: 200, priceUsd: 0.001 } }];
   async produce(req, ctx) {
-    const ir      = await this.expand(req, ctx, { rounds: 1 }); // override: single-round
-    const params  = await this.adapt(ir, ctx);                  // L4: no-op (identity)
-    const samples = await this.decode(params, ctx);             // L5: deterministic generator (frozen)
+    const ir = await this.expand(req, ctx, { rounds: 1 }); // override: single-round
+    const params = await this.adapt(ir, ctx); // L4: no-op (identity)
+    const samples = await this.decode(params, ctx); // L5: deterministic generator (frozen)
     return this.pkg(samples, req, this.routes[0], ctx);
   }
-  manifestRows(a) { return [row("L5", a.generatorHash, { frozen: true, kind: a.sensorKind })]; }
+  manifestRows(a) {
+    return [row("L5", a.generatorHash, { frozen: true, kind: a.sensorKind })];
+  }
 }
 ```
 

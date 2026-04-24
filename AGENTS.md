@@ -55,7 +55,12 @@ Read [`docs/architecture.md`](docs/architecture.md) before changing structure.
 3. [`docs/codec-protocol.md`](docs/codec-protocol.md)
 4. [`docs/reproducibility.md`](docs/reproducibility.md)
 5. [`docs/team-split.md`](docs/team-split.md)
-6. [`docs/codecs/image.md`](docs/codecs/image.md) for the sole image path
+6. [`docs/THESIS.md`](docs/THESIS.md)
+7. [`docs/tracks.md`](docs/tracks.md)
+8. [`docs/rfcs/README.md`](docs/rfcs/README.md)
+9. [`docs/adrs/README.md`](docs/adrs/README.md)
+10. [`docs/research/briefs/README.md`](docs/research/briefs/README.md)
+11. [`docs/codecs/image.md`](docs/codecs/image.md) for the sole image path
 
 ## Do Not Do
 
