@@ -28,7 +28,7 @@ Is the first image decoder we integrate a discrete-token decoder (LFQ / FSQ fami
 
 The discrete-token path is the only path consistent with three already-locked decisions:
 
-1. **ADR-0005 — Decoder ≠ generator.** A frozen tokenizer + frozen decoder transformer is decisively a *decoder*: given the tokens, the output is deterministic up to floating-point noise. A diffusion model, sampling from a learned image distribution conditional on a prompt, is a *generator*. ADR-0005 binds the core path to the former.
+1. **ADR-0005 — Decoder ≠ generator.** A frozen tokenizer + frozen decoder transformer is decisively a _decoder_: given the tokens, the output is deterministic up to floating-point noise. A diffusion model, sampling from a learned image distribution conditional on a prompt, is a _generator_. ADR-0005 binds the core path to the former.
 2. **Brief A — VQ/VLM lineage.** Brief A surveyed VQGAN → MAGVIT-v2 → LFQ → FSQ and concluded the LFQ-family is the v0.2 vocabulary. Picking diffusion at M1 would silently reverse Brief A.
 3. **Brief B — Layered IR.** The `IR.Text` slot maps cleanly onto a token sequence ("emit these K codebook indices"). An `IR.Latent` slot, currently uninhabited, is the natural future home for direct latent-prediction. Diffusion's latent space (the noise schedule) is not the same shape and would force an awkward third slot.
 
@@ -36,10 +36,10 @@ The concrete pick: **a VQGAN-class decoder, frozen at a pinned checkpoint, with 
 
 ### Red team
 
-- **"VQGAN's quality is dated. Modern outputs come from diffusion."** True at the absolute frontier. The repo's job at v0.2 is not to ship state-of-the-art image quality; it is to ship a *protocol shape* that survives a frozen-decoder swap. When MAGVIT-v2 weights become permissively licensed, or when an FSQ-trained successor lands, the codec swaps the decoder behind the same `Codec<ImageRequest, ImageArtifact>` interface and the rest of the system does not change. Quality is a v0.3 concern; protocol fit is the v0.2 concern.
+- **"VQGAN's quality is dated. Modern outputs come from diffusion."** True at the absolute frontier. The repo's job at v0.2 is not to ship state-of-the-art image quality; it is to ship a _protocol shape_ that survives a frozen-decoder swap. When MAGVIT-v2 weights become permissively licensed, or when an FSQ-trained successor lands, the codec swaps the decoder behind the same `Codec<ImageRequest, ImageArtifact>` interface and the rest of the system does not change. Quality is a v0.3 concern; protocol fit is the v0.2 concern.
 - **"Emu3 is closer to the thesis: pure NTP over a unified tokenizer kills the scene-spec layer."** Possibly true as a v0.4 vision; not as a v0.2 ship. Emu3's released artifacts are research weights, not a hardened decoder pipeline; the integration cost is large enough that it would push M1 past v0.2. We name Emu3 explicitly as the kill-criterion target for G1's default — see below.
 - **"GPT-4o native image generation already does this end-to-end."** Closed model; no decoder to integrate. Useful as a capability target, not as an implementation reference.
-- **"Diffusion-as-opt-in adapter satisfies ADR-0005 because the *core* path stays VQ."** Allowed by ADR-0005's wording. Out of scope for v0.2 — see G1 verdict, "future opt-in" line.
+- **"Diffusion-as-opt-in adapter satisfies ADR-0005 because the _core_ path stays VQ."** Allowed by ADR-0005's wording. Out of scope for v0.2 — see G1 verdict, "future opt-in" line.
 
 ### Kill criteria
 
@@ -61,7 +61,7 @@ When `codec-image` grows a real L4 adapter (scene-spec → tokenizer-codebook br
 
 ### Steelman (default: synthetic-pair v0.2 demo, licensed-pair v0.3)
 
-The L4 adapter is the only trainable component in the image stack. Its job is small: map a scene-spec JSON object to a sequence of K codebook indices for the frozen decoder. This is *not* "train another image model"; it is "train a small bridge", in the LoRA-or-MLP class.
+The L4 adapter is the only trainable component in the image stack. Its job is small: map a scene-spec JSON object to a sequence of K codebook indices for the frozen decoder. This is _not_ "train another image model"; it is "train a small bridge", in the LoRA-or-MLP class.
 
 For v0.2 the right training data is **synthetic scene-spec pairs generated from the existing 35-tile showcase**, expanded ~1000× via captioner re-prompting against the locked spec schema. This produces ~30k–60k pairs, enough to train an MLP-class bridge to convergence on a single GPU in hours, not days. The bias of the captioner is a known cost; in exchange we get a dataset that is in-repo, license-clean, and reproducible from a recorded seed.
 
@@ -95,12 +95,12 @@ How does `codec-image` ship to users who are not cloning the repo — MCP server
 
 The packaging matrix has a natural release-train ordering:
 
-| Form           | When     | Why                                                                                                                                             |
-| -------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `npx` one-liner | v0.2     | Matches RFC-0002's CLI ergonomics. Zero-install. Same binary as `wittgenstein` from a clone. Highest leverage per hour.                         |
-| MCP server     | v0.3     | The `Codec<Req, Art>.produce` signature is *already* a tool definition; an MCP wrapper is a thin shell. Natural fit, premature for v0.2.        |
-| Claude Skill   | v0.3     | Skill = AGENTS.md-shaped primer + the MCP server it points at. Lands with the MCP form, not before.                                             |
-| `curl \| sh`   | v0.4+    | Matches `rustup` / `gh`. Highest trust cost (users must trust `wittgenstein.wtf`). Worth doing once the site has real content per RFC-0004 M4.  |
+| Form            | When  | Why                                                                                                                                            |
+| --------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npx` one-liner | v0.2  | Matches RFC-0002's CLI ergonomics. Zero-install. Same binary as `wittgenstein` from a clone. Highest leverage per hour.                        |
+| MCP server      | v0.3  | The `Codec<Req, Art>.produce` signature is _already_ a tool definition; an MCP wrapper is a thin shell. Natural fit, premature for v0.2.       |
+| Claude Skill    | v0.3  | Skill = AGENTS.md-shaped primer + the MCP server it points at. Lands with the MCP form, not before.                                            |
+| `curl \| sh`    | v0.4+ | Matches `rustup` / `gh`. Highest trust cost (users must trust `wittgenstein.wtf`). Worth doing once the site has real content per RFC-0004 M4. |
 
 ### Red team
 
