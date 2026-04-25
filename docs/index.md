@@ -2,7 +2,14 @@
 
 The current doctrine surface for v0.2. Read top-to-bottom for an onboarding pass; jump in by section after that. The order below matches what `AGENTS.md` and `docs/contributor-map.md` recommend.
 
-## Start here
+## For agents and maintainers: Start here first
+
+Read these two files before any task:
+
+- [`.claude/AGENT_PROMPT.md`](../.claude/AGENT_PROMPT.md) — orientation (what the project is, how to find information, exact working discipline)
+- [`engineering-discipline.md`](engineering-discipline.md) — working standards (code style, robustness, testing, reporting, constraints)
+
+## Then understand the thesis and governance
 
 - [`THESIS.md`](THESIS.md) — smallest locked statement of the project
 - [`tracks.md`](tracks.md) — Researcher / Hacker dual-track contract

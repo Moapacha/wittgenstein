@@ -49,18 +49,31 @@ Read [`docs/architecture.md`](docs/architecture.md) before changing structure.
 
 ## Read Order
 
-0. Optional depth: [`packages/agent-contact-text/README.md`](packages/agent-contact-text/README.md) + `02_AI_Execution_Context.md` in that folder (long-form agent context).
-1. [`docs/build-philosophy.md`](docs/build-philosophy.md)
-2. [`docs/hard-constraints.md`](docs/hard-constraints.md)
-3. [`docs/codec-protocol.md`](docs/codec-protocol.md)
-4. [`docs/reproducibility.md`](docs/reproducibility.md)
-5. [`docs/team-split.md`](docs/team-split.md)
-6. [`docs/THESIS.md`](docs/THESIS.md)
+**Start here for any task:**
+0. [`.claude/AGENT_PROMPT.md`](.claude/AGENT_PROMPT.md) — what you are, where to find answers, how to work here
+1. [`docs/engineering-discipline.md`](docs/engineering-discipline.md) — code style, robustness, testing, reporting standards
+
+**Then context:**
+2. [`docs/THESIS.md`](docs/THESIS.md) — smallest locked statement
+3. [`docs/hard-constraints.md`](docs/hard-constraints.md) — what will not change
+4. [`docs/build-philosophy.md`](docs/build-philosophy.md)
+5. [`docs/codec-protocol.md`](docs/codec-protocol.md)
+6. [`docs/reproducibility.md`](docs/reproducibility.md)
+
+**Then decision records:**
 7. [`docs/tracks.md`](docs/tracks.md)
 8. [`docs/rfcs/README.md`](docs/rfcs/README.md)
 9. [`docs/adrs/README.md`](docs/adrs/README.md)
+
+**Then research and execution:**
 10. [`docs/research/briefs/README.md`](docs/research/briefs/README.md)
-11. [`docs/codecs/image.md`](docs/codecs/image.md) for the sole image path
+11. [`docs/exec-plans/active/codec-v2-port.md`](docs/exec-plans/active/codec-v2-port.md) — the live P6 plan
+12. [`docs/codecs/`](docs/codecs/) — per-modality docs (image.md, audio.md, sensor.md)
+13. [`docs/agent-guides/`](docs/agent-guides/) — port recipes and implementation briefs
+
+**Optional depth:**
+- [`packages/agent-contact-text/README.md`](packages/agent-contact-text/README.md) + context corpus for long-form context
+- [`docs/team-split.md`](docs/team-split.md)
 
 ## Do Not Do
 
