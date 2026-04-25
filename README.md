@@ -189,13 +189,27 @@ cannot offer this; frozen VQ decoding does. See [`docs/reproducibility.md`](docs
 ### For engineers
 
 - [`docs/THESIS.md`](docs/THESIS.md) — the smallest locked statement page in the repo
+- [`docs/contributor-map.md`](docs/contributor-map.md) — onboarding map for humans and agents
+- [`docs/glossary.md`](docs/glossary.md) — locked vocabulary (Harness / Codec / Spec / IR / Decoder / Adapter / Packaging)
+- [`docs/tracks.md`](docs/tracks.md) — Researcher / Hacker dual-track contract
 - [`docs/inheritance-audit.md`](docs/inheritance-audit.md) — what survives, what gets promoted, what gets retired
 - [`docs/SYNTHESIS_v0.2.md`](docs/SYNTHESIS_v0.2.md) — branch-level merge brief and human/agent handoff
+- [`docs/v02-final-audit.md`](docs/v02-final-audit.md) — pre-lock decision ledger + handoff sign-off
 - [`docs/architecture.md`](docs/architecture.md) — five-layer system, dataflow, package layout
 - [`docs/codec-protocol.md`](docs/codec-protocol.md) — the `WittgensteinCodec` contract every codec obeys
 - [`docs/reproducibility.md`](docs/reproducibility.md) — manifest spine and seed rules
 - [`docs/implementation-status.md`](docs/implementation-status.md) — Ships / Partial / Stub matrix
 - [`docs/hard-constraints.md`](docs/hard-constraints.md) — what will not change
+
+### For maintainers and contributing agents
+
+- [`docs/exec-plans/active/codec-v2-port.md`](docs/exec-plans/active/codec-v2-port.md) — the live P6 plan (M0 → M5b) for porting all codecs to Codec Protocol v2
+- [`docs/agent-guides/README.md`](docs/agent-guides/README.md) — index of prompt-ready execution briefs
+- [`docs/agent-guides/image-to-audio-port.md`](docs/agent-guides/image-to-audio-port.md) — cross-line context (M0–M2)
+- [`docs/agent-guides/audio-port.md`](docs/agent-guides/audio-port.md) — audio line, M2 (route collapse, soft-deprecation)
+- [`docs/agent-guides/sensor-port.md`](docs/agent-guides/sensor-port.md) — sensor line, M3 (no-L4 confirmation case)
+- [`docs/rfcs/README.md`](docs/rfcs/README.md) — engineering decisions (RFCs 0001 codec v2, 0002 CLI, 0004 site, 0005 naming)
+- [`docs/adrs/README.md`](docs/adrs/README.md) — ratified decisions (ADRs 0006 layered IR, 0007 Path C rejected, 0008 codec v2, 0009 CLI v2, 0011 naming v2)
 
 ### For hackers
 
@@ -212,7 +226,7 @@ cannot offer this; frozen VQ decoding does. See [`docs/reproducibility.md`](docs
 - [`docs/research/compression-view-of-llms.md`](docs/research/compression-view-of-llms.md) — LLMs as neural compressors; why structured IR beats pixel emission
 - [`docs/research/frozen-llm-multimodality.md`](docs/research/frozen-llm-multimodality.md) — frozen backbone + adapter vs. end-to-end multimodal giants
 - [`docs/research/neural-codec-references.md`](docs/research/neural-codec-references.md) — annotated lineage: VQ-VAE → VQGAN → DALL-E 1 → LlamaGen → SEED → TiTok
-- [`docs/research/briefs/README.md`](docs/research/briefs/README.md) — Phase P2 briefs: lineage, stance, horizon, CLI, benchmarks, site reconciliation
+- [`docs/research/briefs/README.md`](docs/research/briefs/README.md) — research briefs A–G: lineage, Ilya↔LeCun stance, horizon, CLI, benchmarks, site, image-network clues
 - [`docs/benchmark-standards.md`](docs/benchmark-standards.md) — FID / CLIPScore / WER / UTMOS / discriminative-score protocol
 - [`docs/adrs/`](docs/adrs/) — architecture decision records
 

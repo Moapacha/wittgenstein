@@ -195,3 +195,42 @@ Ordered, finite, and directly executable.
 13. Start `codec-v2-port.md` at `M0`, then `M1 image`, then `M2 audio`, in that order. The plan is fully drafted (per-package diff, golden parity contract, migration tests, rollback criteria) — see the doc's `## Pre-flight checklist` for the M0 unblock list.
 
 That is the full close-out list. Nothing else in this milestone should be treated as unresolved doctrine.
+
+---
+
+## 7. Pass-2 closeout (2026-04-25 evening)
+
+A second audit pass landed before handoff. The pass had four jobs: confirm research completeness against the master thesis, verify internal alignment across doctrine + engineering surfaces, raise the work to senior-grade quality, and deliver a repo state that maintainers + agents can pick up cold for LLM→Audio and LLM→Sensor while the user drives LLM→Image.
+
+What changed:
+
+- **Brief G promoted from 🔴 stub to 🟡 Draft v0.1** with concrete G1 / G2 / G3 verdicts: VQGAN-class frozen decoder + LlamaGen tokenizer for v0.2; synthetic-pair adapter training for v0.2 with licensed-pair (CC12M + DataComp-1B) escalation for v0.3; npx → MCP → Skill → curl release-train ordering. M1 is no longer gated on a stub.
+- **`docs/codecs/audio.md` and `docs/codecs/sensor.md` upgraded to image-md parity** — position statement, decoder candidates with rationale, adapter role (pass-through, justified), failure modes, honest risk statement. A contributor can read either codec doc and ship the port without re-deriving the decoder choice.
+- **Two new agent guides:** `docs/agent-guides/audio-port.md` (M2) and `docs/agent-guides/sensor-port.md` (M3) — standalone execution briefs so a contributor can pick up either line cold without reading the image guide first. Each carries a prompt block for an implementation agent.
+- **`docs/agent-guides/README.md` rewritten** with an explicit "how to pick a guide" section and a guide-table.
+- **`docs/SYNTHESIS_v0.2.md`** patched: §12 line on layered epistemology now says `IR =` (not `Handoff =`) and notes the early-RFC-0001 working name was reverted; §12 "Still open" line on port ordering now reads image → audio → sensor (not the reversed earlier draft).
+- **`docs/index.md` rewritten** to reflect the actual v0.2 surface (THESIS, tracks, contributor-map, glossary, briefs A–G, RFCs 0001–0005, ADRs 0006–0011, agent guides, codec-v2-port plan, v02-final-audit). The earlier index pointed only to pre-v0.2 doctrine and the day-1 stubs.
+- **Stale `*-day-1.md` stubs archived** under `docs/exec-plans/archive/` with a README explaining what subsumes them. `docs/exec-plans/active/` now contains exactly the live `codec-v2-port.md`.
+
+What did **not** change (rejected as bloat):
+
+- **No new briefs H/I/J/K.** The user explicitly invited finer or wider research divisions, but adding speculative briefs without research substance is brief-spam, not senior work. The audio + sensor decoder rationale lives in the codec docs (right scope for a v0.2 commitment); a future audio-network or sensor-library brief is a v0.3 concern if and when evidence demands it.
+- **No engineering refactor.** `harness.ts` modality branching, the asciipng / svg-local / video-inline-svgs orphan generators, and the codec-registry soft-circular dependency are all explicit M4 cleanup work in the v2 plan. Doing them now would jump the queue.
+- **No `pnpm test:goldens` script land.** The plan calls for it before M0; writing it in this audit PR couples doctrine to code unnecessarily. It lands as the first commit of the M0 PR.
+
+## 8. Handoff sign-off
+
+The repo is in a state where:
+
+- the user can drive M1 image with Brief G's verdicts as the defensible default;
+- a contributor + agent can take M2 audio cold via `docs/agent-guides/audio-port.md`;
+- a contributor + agent can take M3 sensor cold via `docs/agent-guides/sensor-port.md`;
+- `docs/index.md` and `AGENTS.md` route both humans and agents to the right read order;
+- every load-bearing decision has an ADR or a brief; every active execution surface has an agent guide.
+
+Pre-flight remaining (none block this PR):
+
+- write the `pnpm test:goldens` invariant as the first commit of the M0 PR (named in `codec-v2-port.md` §Pre-flight checklist);
+- monitor whether VQGAN-class outputs hit Brief G's CLIPScore floor; escalate to LlamaGen full decoder if not.
+
+This audit is complete. Subsequent doctrine work belongs in a new RFC or a new audit, not in extending this file.

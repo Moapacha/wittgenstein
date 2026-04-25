@@ -219,7 +219,7 @@ that stance.
 
 - Thesis: "the modality harness for text-first LLMs"
 - L1–L5 architecture, decoder ≠ generator, no silent fallbacks, RunManifest spine
-- Layered epistemology (ADR-0006) — `Handoff = Text | Latent | Hybrid` sum type; only `Text` ships at v0.2
+- Layered epistemology (ADR-0006) — `IR = Text | Latent | Hybrid` sum type; only `Text` ships at v0.2 (the early-RFC-0001 working name "Handoff" was reverted in ADR-0011)
 - Path C rejected (ADR-0007) — no full multimodal retrain through v0.4
 - Codec Protocol v2 (ADR-0008) — kill date for pre-v2 surface is v0.3.0
 - CLI ergonomics v2 (ADR-0009) — NDJSON contract, two deliberate divergences (no REPL, no user-facing `--model`)
@@ -227,7 +227,7 @@ that stance.
 
 **Still open (returns in P6 — separate execution plan):**
 
-- Actual code port: sensor → audio → image per RFC-0001 §Migration
+- Actual code port: image → audio → sensor per `docs/exec-plans/active/codec-v2-port.md` (image-first per the 2026-04-24 alignment review; the earlier draft's sensor-first ordering was reversed)
 - Benchmarks v2 bridge per Brief E's metric picks
 - Site rewrite per RFC-0004 (site-ops PR, separate repo)
 - Showcase regeneration against the Codec v2 surface once migrated
