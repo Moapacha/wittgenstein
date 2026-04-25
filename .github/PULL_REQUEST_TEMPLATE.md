@@ -3,6 +3,11 @@ Thanks for opening a PR! Wittgenstein is an early-stage project — any size of
 contribution is welcome, including docs, typos, and "make this clearer" edits.
 
 First PR? See CONTRIBUTING.md for the branch workflow and what we look for.
+
+House style — the canonical operating manual for code in this repo is
+docs/engineering-discipline.md (read-before-write, smallest-effective-change,
+no drive-by refactor, evidence-backed validation, structured reporting).
+Reviewers will defer to that doc when something looks off.
 -->
 
 ## Summary

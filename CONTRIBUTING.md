@@ -31,11 +31,11 @@ Stuck? [`SUPPORT.md`](SUPPORT.md) lists where to ask what.
 
 New contributors: pick one of these first.
 
-| Difficulty | Where to look | Example |
-|---|---|---|
-| **Easy** | Anything labelled `good first issue` or `docs` on GitHub | Fix a broken link, clarify a README section, add a missing type |
-| **Medium** | `⚠️ Experimental feedback` issues in [`docs/implementation-status.md`](docs/implementation-status.md) | Add a benchmark case, write a codec doc page, add a new LLM provider adapter |
-| **Deep** | `🔴 Stub` rows in [`docs/implementation-status.md`](docs/implementation-status.md) | Wire a frozen VQ decoder into `codec-image`, port a codec from Python to TypeScript |
+| Difficulty | Where to look                                                                                         | Example                                                                             |
+| ---------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| **Easy**   | Anything labelled `good first issue` or `docs` on GitHub                                              | Fix a broken link, clarify a README section, add a missing type                     |
+| **Medium** | `⚠️ Experimental feedback` issues in [`docs/implementation-status.md`](docs/implementation-status.md) | Add a benchmark case, write a codec doc page, add a new LLM provider adapter        |
+| **Deep**   | `🔴 Stub` rows in [`docs/implementation-status.md`](docs/implementation-status.md)                    | Wire a frozen VQ decoder into `codec-image`, port a codec from Python to TypeScript |
 
 For architectural proposals, the flow is **brief → RFC → ADR → code**. See
 [`docs/tracks.md`](docs/tracks.md) for the contract between the researcher and hacker
@@ -125,6 +125,12 @@ If either hat dissents, the doc iterates. See [`docs/tracks.md`](docs/tracks.md)
 - Docs-only PRs: one maintainer review is enough, and often much faster than a code PR.
 
 ## Engineering rules (non-negotiable)
+
+> **House style — read this first.** [`docs/engineering-discipline.md`](docs/engineering-discipline.md)
+> is the canonical operating manual for code in this repo: read-before-write,
+> smallest-effective-change, no drive-by refactor, evidence-backed validation,
+> structured failure reporting. The bullets below are the load-bearing subset
+> that we will reject a PR over; the full sharp version lives in the doc.
 
 - TypeScript strict mode stays on.
 - zod schemas guard every boundary that crosses package or runtime edges.

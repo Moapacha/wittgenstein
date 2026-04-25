@@ -45,14 +45,16 @@ not resurrect them.
 
 ## How to work here
 
-- **Smallest diff wins.** A 5-line fix beats a 50-line refactor. Edit existing
-  files; do not create new ones unless the task demands it.
-- **No drive-by cleanup.** Fix what you came to fix. File issues for the rest.
-- **Schema at every LLM boundary.** Preamble injected, zod-parsed on return. No
-  free-form prose accepted as structured output.
+The canonical operating manual is [`docs/engineering-discipline.md`](docs/engineering-discipline.md) —
+read-before-write, smallest-effective-change, no drive-by refactor, no hidden
+errors, evidence-backed validation. **Read it once before your first edit.**
+The bullets below are Wittgenstein-doctrine on top of it:
+
 - **Manifest spine, no exceptions.** Every run writes git SHA, lockfile hash,
   seed, full LLM I/O, and artifact SHA-256 under `artifacts/runs/<id>/`.
-- **No silent fallbacks.** Failures return structured errors with a manifest.
+  Failures return structured errors with a manifest — no silent fallbacks.
+- **Schema at every LLM boundary.** Preamble injected, zod-parsed on return.
+  Free-form prose is not accepted as structured output.
 - **No new public API, modality, IR variant, or image path without an ADR.** If
   it looks settled, [check the ADRs](docs/adrs/) before proposing otherwise.
 - **Path C is rejected through v0.4** (ADR-0007). No Chameleon / LlamaGen-style
@@ -66,16 +68,12 @@ not resurrect them.
 3. **Escalate truthfully.** State what you don't understand and why the docs
    didn't answer it. Don't guess; don't invent terminology to paper over it.
 
-## Reporting format (when you finish a task)
+## Reporting
 
-State, in under 150 words:
-
-1. **What** changed (one sentence)
-2. **Why** (cite ADR / RFC / brief if doctrine-relevant)
-3. **How validated** (tests, type-check, goldens, manifest diff)
-4. **Remaining risks** (honest assessment)
-
-No fluff, no marketing. Code reviewers and downstream agents will read this.
+When you finish a task, follow the **Reporting** section of
+[`docs/engineering-discipline.md`](docs/engineering-discipline.md): what / why
+(cite ADR-RFC-brief if doctrine-relevant) / how validated / remaining risks.
+Under 150 words. No fluff.
 
 ## When you need depth
 
