@@ -1,0 +1,93 @@
+# PROMPT.md — Agent Prompt for Wittgenstein
+
+> **What this is.** A drop-in prompt for any coding agent (Claude Code, Codex,
+> Cursor, custom harnesses) working on Wittgenstein. Paste it — or point your
+> agent at it — for the smallest correct briefing to act in this repo.
+> [`AGENTS.md`](AGENTS.md) is the longer reference primer; this is the
+> imperative version.
+
+## You are
+
+A contributor agent on **Wittgenstein**, an open-source modality harness for
+text-first LLMs. The frontier model stays text-only; modality capability — image,
+audio, video, sensor — is added _outside_ the model through codecs that emit
+real, validated files. You are operating on a TypeScript monorepo + a Python
+surface (`polyglot-mini/`), with a manifest-spine reproducibility contract.
+
+## Read these first (in this order, then stop)
+
+1. [`docs/THESIS.md`](docs/THESIS.md) — the smallest locked statement (≤1 page)
+2. [`docs/glossary.md`](docs/glossary.md) — locked vocabulary; do not invent alternatives
+3. [`docs/hard-constraints.md`](docs/hard-constraints.md) — what will not change
+4. [`docs/exec-plans/active/codec-v2-port.md`](docs/exec-plans/active/codec-v2-port.md) — the live P6 workstream (M0 → M5b); M0 is the active migration target
+
+That's enough to start. Pull deeper docs **only when the task forces you to**.
+
+## Locked vocabulary (ADR-0011 — non-negotiable)
+
+| Term          | Layer | Meaning                                                                           |
+| ------------- | ----- | --------------------------------------------------------------------------------- |
+| **Harness**   | L1    | Routing, retry, seed, validate, budget, record                                    |
+| **Codec**     | L2    | Modality implementation (owns schema + render)                                    |
+| **Spec**      | L2    | Structured artifact (`ImageSceneSpec`, `AudioPlan`, …)                            |
+| **IR**        | L3    | Internal representation; sum type `Text \| Latent \| Hybrid`; only `Text` at v0.2 |
+| **Decoder**   | L3    | IR → bytes; **frozen, deterministic, never generative** (ADR-0005)                |
+| **Adapter**   | L4    | Learned bridge (Spec → latent); optional, image only today                        |
+| **Packaging** | L5    | CLI · npm · manifests · install                                                   |
+
+Rejected alternatives (Loom, Transducer, Score, Handoff) live in RFC-0003 — do
+not resurrect them.
+
+## How to work here
+
+- **Smallest diff wins.** A 5-line fix beats a 50-line refactor. Edit existing
+  files; do not create new ones unless the task demands it.
+- **No drive-by cleanup.** Fix what you came to fix. File issues for the rest.
+- **Schema at every LLM boundary.** Preamble injected, zod-parsed on return. No
+  free-form prose accepted as structured output.
+- **Manifest spine, no exceptions.** Every run writes git SHA, lockfile hash,
+  seed, full LLM I/O, and artifact SHA-256 under `artifacts/runs/<id>/`.
+- **No silent fallbacks.** Failures return structured errors with a manifest.
+- **No new public API, modality, IR variant, or image path without an ADR.** If
+  it looks settled, [check the ADRs](docs/adrs/) before proposing otherwise.
+- **Path C is rejected through v0.4** (ADR-0007). No Chameleon / LlamaGen-style
+  fused multimodal retrain. Base model stays text-only.
+
+## When stuck
+
+1. Check the canonical docs (THESIS, hard-constraints, glossary, briefs, ADRs).
+2. Check the active exec plan (`docs/exec-plans/active/codec-v2-port.md` —
+   every M-phase has a gate and rollback criterion).
+3. **Escalate truthfully.** State what you don't understand and why the docs
+   didn't answer it. Don't guess; don't invent terminology to paper over it.
+
+## Reporting format (when you finish a task)
+
+State, in under 150 words:
+
+1. **What** changed (one sentence)
+2. **Why** (cite ADR / RFC / brief if doctrine-relevant)
+3. **How validated** (tests, type-check, goldens, manifest diff)
+4. **Remaining risks** (honest assessment)
+
+No fluff, no marketing. Code reviewers and downstream agents will read this.
+
+## When you need depth
+
+In rough order of fan-out:
+
+- [`AGENTS.md`](AGENTS.md) — the full reference primer (longer; read after this)
+- [`docs/architecture.md`](docs/architecture.md) — five-layer mapping with code paths
+- [`docs/codec-protocol.md`](docs/codec-protocol.md) — the `Codec<Req, Art>` contract
+- [`docs/contributor-map.md`](docs/contributor-map.md) — onboarding map (humans + agents)
+- [`docs/agent-guides/`](docs/agent-guides/) — per-port execution briefs (audio, sensor, image-to-audio)
+- [`docs/research/briefs/`](docs/research/briefs/) — research lineage A–G
+- [`docs/rfcs/`](docs/rfcs/) and [`docs/adrs/`](docs/adrs/) — engineering decisions
+
+Running under **Claude Code** specifically? Layer
+[`.claude/AGENT_PROMPT.md`](.claude/AGENT_PROMPT.md) on top — Claude-specific
+working-rules and code-style overlay; does not restate what is above.
+
+---
+
+You are done when the task is done — not when you run out of ideas.

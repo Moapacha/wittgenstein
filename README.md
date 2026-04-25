@@ -30,6 +30,18 @@ expressive contract lives in code, not prompt copy.
 > Breaking changes are still possible before `0.1.0`. **We are actively looking for
 > early adopters and contributors** — see [How to help](#how-to-help) below.
 
+> **First time here? Pick your route.**
+>
+> - 👤 **Human contributor** — start with [`docs/THESIS.md`](docs/THESIS.md) (the
+>   one-page lock), then [`docs/contributor-map.md`](docs/contributor-map.md) for
+>   the onboarding tour and [`CONTRIBUTING.md`](CONTRIBUTING.md) for the branch
+>   workflow.
+> - 🤖 **Agent contributor** (or human running an agent as your primary dev tool)
+>   — paste [`PROMPT.md`](PROMPT.md) into your agent. It is a self-contained,
+>   vendor-neutral prompt (Claude Code, Codex, Cursor, custom harnesses) that
+>   gives the smallest correct briefing for landing a PR in this repo. For
+>   reference depth, [`AGENTS.md`](AGENTS.md) is the longer primer.
+
 ---
 
 ## Why this exists
