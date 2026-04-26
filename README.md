@@ -303,8 +303,7 @@ latents and is waiting on a frozen VQ decoder bridge; video is a typed stub.
 
 **What's next.** Doctrine is locked; the active workstream is the Codec Protocol v2 port
 across all modalities, sequenced in [`docs/exec-plans/active/codec-v2-port.md`](docs/exec-plans/active/codec-v2-port.md)
-(M0 image → M1 image refinement → M2 audio → M3 sensor → M4 video stub → M5a/b benchmarks).
-M0 is the first migration target.
+(`M0` and `M1A` are landed; `M2 audio` is next; `M1B image depth` is tracked separately).
 
 Roadmap: [`ROADMAP.md`](ROADMAP.md). Changelog: [`CHANGELOG.md`](CHANGELOG.md).
 Security: [`SECURITY.md`](SECURITY.md).
