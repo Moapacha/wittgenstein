@@ -67,7 +67,12 @@ describe("adapter-resolve", () => {
       renderHints: { detailLevel: "medium", tokenBudget: 1024, seed: null },
     };
 
-    const logger = { debug: () => undefined, info: () => undefined, warn: () => undefined, error: () => undefined };
+    const logger = {
+      debug: () => undefined,
+      info: () => undefined,
+      warn: () => undefined,
+      error: () => undefined,
+    };
     const resolved = await resolveMlpForScene(spec, {
       runId: "t",
       runDir: dir,
@@ -108,7 +113,12 @@ describe("adapter-resolve", () => {
       renderHints: { detailLevel: "medium", tokenBudget: 1024, seed: null },
     };
 
-    const logger = { debug: () => undefined, info: () => undefined, warn: () => undefined, error: () => undefined };
+    const logger = {
+      debug: () => undefined,
+      info: () => undefined,
+      warn: () => undefined,
+      error: () => undefined,
+    };
     const resolved = await resolveMlpForScene(spec, {
       runId: "t",
       runDir: dir,

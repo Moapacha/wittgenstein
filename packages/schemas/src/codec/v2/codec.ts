@@ -24,7 +24,7 @@
  *
  * @experimental
  */
-import type { Modality } from "@wittgenstein/schemas";
+import type { Modality } from "../../modality.js";
 import type { HarnessCtx } from "./ctx.js";
 import type { CodecWarning } from "./warning.js";
 import type { StandardSchemaV1 } from "./standard-schema.js";

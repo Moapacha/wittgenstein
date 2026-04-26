@@ -1,10 +1,6 @@
 import type { RenderCtx } from "@wittgenstein/schemas";
 import { resolveMlpForScene, predictWithResolved } from "../adapters/adapter-resolve.js";
-import {
-  ImageLatentCodesSchema,
-  type ImageLatentCodes,
-  type ImageSceneSpec,
-} from "../schema.js";
+import { ImageLatentCodesSchema, type ImageLatentCodes, type ImageSceneSpec } from "../schema.js";
 
 export type { ImageLatentCodes };
 export { ImageLatentCodesSchema };
@@ -61,10 +57,7 @@ function placeholderLatents(parsed: ImageSceneSpec, ctx: RenderCtx): ImageLatent
   return latentCodes;
 }
 
-function annotateLatents(
-  parsed: ImageSceneSpec,
-  latents: ImageLatentCodes,
-): ImageLatentCodes {
+function annotateLatents(parsed: ImageSceneSpec, latents: ImageLatentCodes): ImageLatentCodes {
   const seed = hashSpecToSeed(parsed);
   const tokens = [...latents.tokens];
   if (tokens.length >= 4) {
@@ -90,32 +83,16 @@ function inferSceneMode(parsed: ImageSceneSpec): number {
   ) {
     return 0;
   }
-  if (
-    haystack.includes("forest") ||
-    haystack.includes("wood") ||
-    haystack.includes("tree")
-  ) {
+  if (haystack.includes("forest") || haystack.includes("wood") || haystack.includes("tree")) {
     return 1;
   }
-  if (
-    haystack.includes("lake") ||
-    haystack.includes("river") ||
-    haystack.includes("water")
-  ) {
+  if (haystack.includes("lake") || haystack.includes("river") || haystack.includes("water")) {
     return 2;
   }
-  if (
-    haystack.includes("mountain") ||
-    haystack.includes("peak") ||
-    haystack.includes("alpine")
-  ) {
+  if (haystack.includes("mountain") || haystack.includes("peak") || haystack.includes("alpine")) {
     return 3;
   }
-  if (
-    haystack.includes("meadow") ||
-    haystack.includes("hill") ||
-    haystack.includes("field")
-  ) {
+  if (haystack.includes("meadow") || haystack.includes("hill") || haystack.includes("field")) {
     return 4;
   }
   return hashSpecToSeed(parsed) % 5;

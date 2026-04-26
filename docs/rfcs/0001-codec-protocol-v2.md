@@ -50,12 +50,16 @@ The shape of this proposal is boring on purpose. It is a refactor, not a researc
 
 ## Interface
 
-All signatures are TypeScript. File layout: `packages/core/src/codec/v2/` holds the interface and the HarnessCtx; each codec package (`codec-image`, `codec-audio`, `codec-sensor`, `codec-video`) ships a v2-conformant class alongside its current implementation during the migration window.
+All signatures are TypeScript. File layout: `packages/schemas/src/codec/v2/` holds the
+protocol types (`IR`, `Codec`, `HarnessCtx`, `BaseCodec`); `@wittgenstein/core` surfaces
+them under the `codecV2` namespace via re-export from `@wittgenstein/schemas`. Each
+codec package (`codec-image`, `codec-audio`, `codec-sensor`, `codec-video`) ships a
+v2-conformant class alongside its current implementation during the migration window.
 
 ### The IR sum type
 
 ```ts
-// packages/core/src/codec/v2/ir.ts
+// packages/schemas/src/codec/v2/ir.ts
 
 export type IR =
   | { kind: "Text"; text: string }
@@ -72,7 +76,7 @@ Only `Text` is inhabited at v0.2. `Latent` is a reserved slot for Brief B's JEPA
 ### The Codec interface
 
 ```ts
-// packages/core/src/codec/v2/codec.ts
+// packages/schemas/src/codec/v2/codec.ts
 
 export type Modality =
   | "image-svg"
@@ -103,7 +107,7 @@ export interface Codec<Req, Art> {
 ### The HarnessCtx
 
 ```ts
-// packages/core/src/codec/v2/ctx.ts
+// packages/schemas/src/codec/v2/ctx.ts
 
 export interface HarnessCtx {
   seed: number;
@@ -334,7 +338,7 @@ Phased per the `docs/exec-plans/` convention. One minor release per phase. Kill 
 
 ### Phase M1 — Introduce `Codec<Req, Art>` alongside the harness (v0.2.1)
 
-- Land `packages/core/src/codec/v2/{ir,codec,ctx,base}.ts`.
+- Land `packages/schemas/src/codec/v2/{ir,codec,ctx,base}.ts`.
 - No codec package changes; no `harness.ts` changes. The interface exists, is exported, is documented, is compiled. Nothing uses it yet.
 - Deprecation window begins: the v0.2 codec surface is marked `@deprecated since v0.2.1, removed in v0.3.0`.
 - Exit criterion: published TypeDoc for the new surface; zero runtime behavior change.
@@ -355,7 +359,7 @@ Phased per the `docs/exec-plans/` convention. One minor release per phase. Kill 
 ### Phase M4 — Port `codec-image` (v0.2.4)
 
 - The crown jewel. Only modality where L4 and L5 are non-trivially real.
-- Rename per Brief A: the decoder slot in the manifest changes from `"VQ-decoder"` to `"LFQ-family-decoder"`. A one-time manifest-migration tool (`wittgenstein migrate-manifest --from 0.2 --to 0.3`) rewrites historical receipts.
+- Rename per Brief A: the decoder slot in the manifest is `"LFQ-family-decoder"`. A one-time manifest-migration tool (`wittgenstein migrate-manifest --from 0.2 --to 0.3`) rewrites historical receipts.
 - `SvgRequest.source` and `AsciipngRequest.source` become hints (`req.hints.preferSource`), deprecated.
 - Exit criterion: FID / CLIPScore parity on the image eval set; adapter hash stable; LFQ decoder hash stable.
 
@@ -423,7 +427,7 @@ canonical implementation in this repo; the typing change is optionality,
 not migration.
 
 ```ts
-// packages/core/src/codec/v2/codec.ts (amended)
+// packages/schemas/src/codec/v2/codec.ts (amended)
 
 import type { StandardSchemaV1 } from "@standard-schema/spec";
 
@@ -449,7 +453,7 @@ structured, declarative entry on the result rather than a silent transform.
 `warnings: CodecWarning[]` field. Empty array is valid; missing array is not.
 
 ```ts
-// packages/core/src/codec/v2/codec.ts (amended)
+// packages/schemas/src/codec/v2/codec.ts (amended)
 
 export interface CodecWarning {
   code: string; // codec-declared messageId; see Brief H Practice 3

@@ -25,7 +25,7 @@ import type { BaseArtifact, Codec, ManifestRow, Route } from "./codec.js";
 import type { HarnessCtx } from "./ctx.js";
 import type { IR } from "./ir.js";
 import type { StandardSchemaV1 } from "./standard-schema.js";
-import type { Modality } from "@wittgenstein/schemas";
+import type { Modality } from "../../modality.js";
 
 export abstract class BaseCodec<Req, Art extends BaseArtifact> implements Codec<Req, Art> {
   abstract readonly id: string;

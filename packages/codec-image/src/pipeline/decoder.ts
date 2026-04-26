@@ -7,6 +7,8 @@ import type { ImageLatentCodes } from "../schema.js";
 
 export interface DecodedRaster {
   pngBytes: Uint8Array;
+  width: number;
+  height: number;
 }
 
 type Rgb = [number, number, number];
@@ -22,19 +24,22 @@ interface SceneProfile {
 export async function decodeLatentsToRaster(
   codes: ImageLatentCodes,
   ctx: RenderCtx,
+  // M1B will wire this seam to streaming / parallel decoder chunks.
+  onChunk?: (chunk: unknown) => void,
 ): Promise<DecodedRaster> {
+  void onChunk;
+  const [tokenWidth, tokenHeight] = codes.tokenGrid;
+  const pixelWidth = tokenWidth * 16;
+  const pixelHeight = tokenHeight * 16;
   const profile = buildSceneProfile(codes.tokens);
   const referencePng = await tryDecodeReferenceLandscape(profile, ctx);
   if (referencePng) {
     ctx.logger.warn(
       "Using narrow-domain reference decoder bridge; output quality is higher, but still stands in for a real pretrained decoder family.",
     );
-    return { pngBytes: referencePng };
+    return { pngBytes: referencePng, width: pixelWidth, height: pixelHeight };
   }
 
-  const [tokenWidth, tokenHeight] = codes.tokenGrid;
-  const pixelWidth = tokenWidth * 16;
-  const pixelHeight = tokenHeight * 16;
   const pixelCount = pixelWidth * pixelHeight;
   const rgba = new Uint8Array(pixelCount * 4);
 
@@ -60,18 +65,27 @@ export async function decodeLatentsToRaster(
 
       const ridge = sampleField(elevation, tokenWidth, tokenHeight, nx, 0.28);
       const distant = sampleField(moisture, tokenWidth, tokenHeight, nx, 0.55);
-      const horizon =
-        clamp01(
-          0.33 +
-            (averageElevation - 0.5) * 0.14 +
-            (ridge - 0.5) * (0.18 + profile.ruggedness * 0.12) +
-            (distant - 0.5) * 0.08,
-        );
+      const horizon = clamp01(
+        0.33 +
+          (averageElevation - 0.5) * 0.14 +
+          (ridge - 0.5) * (0.18 + profile.ruggedness * 0.12) +
+          (distant - 0.5) * 0.08,
+      );
 
       const base = (y * pixelWidth + x) * 4;
       const color =
         ny <= horizon
-          ? renderSky(nx, ny, horizon, warm, moist, det, palette.skyTop, palette.skyHorizon, profile)
+          ? renderSky(
+              nx,
+              ny,
+              horizon,
+              warm,
+              moist,
+              det,
+              palette.skyTop,
+              palette.skyHorizon,
+              profile,
+            )
           : renderTerrain(
               nx,
               ny,
@@ -103,6 +117,8 @@ export async function decodeLatentsToRaster(
   );
   return {
     pngBytes: encodeRgbaAsPng(pixelWidth, pixelHeight, rgba),
+    width: pixelWidth,
+    height: pixelHeight,
   };
 }
 
@@ -163,12 +179,7 @@ function renderTerrain(
   const terrainBase = mixColor(rockBase, grassBase, vegetation);
   let color = mixColor(terrainBase, [178, 134, 84], soilWarmth * 0.22);
 
-  const waterBias =
-    profile.mode === "coast"
-      ? 0.28
-      : profile.mode === "lake"
-        ? 0.34
-        : 0;
+  const waterBias = profile.mode === "coast" ? 0.28 : profile.mode === "lake" ? 0.34 : 0;
   const waterChance = clamp01((moisture - 0.52) * 1.6 + waterBias) * (1 - landT) * 1.4;
   const waterMask =
     smoothstep(0.16, 0.01, landT) *
@@ -184,14 +195,12 @@ function renderTerrain(
   if (profile.mode === "forest") {
     const treeNoise = sampleNoise(nx * 18 + profile.variantA * 3, detail * 7 + nx * 4);
     const treeMask =
-      smoothstep(0.62, 0.82, treeNoise) *
-      smoothstep(0.20, 0.01, landT) *
-      (1 - waterMask);
+      smoothstep(0.62, 0.82, treeNoise) * smoothstep(0.2, 0.01, landT) * (1 - waterMask);
     color = mixColor(color, [52, 79, 52], treeMask * 0.65);
   }
 
   if (profile.mode === "mountain") {
-    const snowMask = smoothstep(0.82, 0.96, elevation) * smoothstep(0.20, 0.02, landT);
+    const snowMask = smoothstep(0.82, 0.96, elevation) * smoothstep(0.2, 0.02, landT);
     color = mixColor(color, [230, 233, 236], snowMask * 0.55);
   }
 
@@ -250,10 +259,13 @@ async function tryDecodeReferenceLandscape(
     ctx.logger.info(`Using reference decoder bridge asset: ${basename(referencePath)}`);
     return png;
   } catch (error) {
-    ctx.logger.warn("Reference decoder bridge unavailable; falling back to procedural placeholder.", {
-      mode: profile.mode,
-      error,
-    });
+    ctx.logger.warn(
+      "Reference decoder bridge unavailable; falling back to procedural placeholder.",
+      {
+        mode: profile.mode,
+        error,
+      },
+    );
     return null;
   }
 }
@@ -273,13 +285,21 @@ function selectReferenceImage(profile: SceneProfile): string | null {
   }
 
   const index = Math.floor(profile.variantA * choices.length) % choices.length;
-  return resolve(process.cwd(), "data/image_adapter/raw/images", choices[index] ?? choices[0] ?? "");
+  return resolve(
+    process.cwd(),
+    "data/image_adapter/raw/images",
+    choices[index] ?? choices[0] ?? "",
+  );
 }
 
 function buildPalette(profile: SceneProfile, averageWarmth: number, averageMoisture: number) {
   if (profile.mode === "coast") {
     return {
-      skyTop: mixColor([49, 92, 155], [116, 132, 181], profile.variantA * 0.6 + averageWarmth * 0.4),
+      skyTop: mixColor(
+        [49, 92, 155],
+        [116, 132, 181],
+        profile.variantA * 0.6 + averageWarmth * 0.4,
+      ),
       skyHorizon: mixColor([236, 225, 214], [255, 210, 168], averageWarmth * 0.8 + 0.1),
       rockBase: [142, 132, 118] as Rgb,
       grassBase: [122, 142, 102] as Rgb,
@@ -455,11 +475,7 @@ function sampleNoise(x: number, y: number): number {
 }
 
 function mixColor(a: Rgb, b: Rgb, t: number): Rgb {
-  return [
-    lerp(a[0], b[0], t),
-    lerp(a[1], b[1], t),
-    lerp(a[2], b[2], t),
-  ];
+  return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
 }
 
 function scaleColor(color: Rgb, factor: number): Rgb {

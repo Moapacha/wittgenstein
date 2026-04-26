@@ -1,12 +1,16 @@
-import type { Modality, WittgensteinCodec } from "@wittgenstein/schemas";
+import type { Modality, WittgensteinCodec, codecV2 } from "@wittgenstein/schemas";
 import { WittgensteinError } from "./errors.js";
 
-export type AnyCodec = WittgensteinCodec<unknown, unknown>;
+export type AnyCodec =
+  | WittgensteinCodec<unknown, unknown>
+  | codecV2.Codec<unknown, codecV2.BaseArtifact>;
 
 export class CodecRegistry {
   private readonly codecs = new Map<Modality, AnyCodec>();
 
-  public register<Req, Parsed>(codec: WittgensteinCodec<Req, Parsed>): this {
+  public register<Req, Parsed, Art extends codecV2.BaseArtifact>(
+    codec: WittgensteinCodec<Req, Parsed> | codecV2.Codec<Req, Art>,
+  ): this {
     this.codecs.set(codec.modality, codec as unknown as AnyCodec);
     return this;
   }
