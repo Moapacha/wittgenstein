@@ -1,5 +1,13 @@
 # Quickstart
 
+> **Status:** demo-surface quickstart. This page is still valid for hands-on runs,
+> especially the deterministic and `polyglot-mini` paths, but it is **not** the main
+> execution brief for the active `M0 → M5b` migration.
+>
+> Use this page when you want to produce a file quickly. Use
+> `docs/exec-plans/active/codec-v2-port.md` and `docs/agent-guides/` when you are
+> changing code or porting a codec.
+
 Three paths to a real file in under a minute. None of them need an API key — they all run
 against the deterministic codec paths.
 
@@ -17,8 +25,9 @@ open /tmp/ecg.html     # macOS; or xdg-open on Linux
 ```
 
 What you get: `/tmp/ecg.json` (operator spec) + `/tmp/ecg.csv` (2,500 samples)
-+ `/tmp/ecg.png` (matplotlib chart) + `/tmp/ecg.html` (~117 KB interactive loupe dashboard,
-zero external dependencies).
+
+- `/tmp/ecg.png` (matplotlib chart) + `/tmp/ecg.html` (~117 KB interactive loupe dashboard,
+  zero external dependencies).
 
 The dashboard has sortable tables, summary stats, and dark/light mode. The whole thing is
 one HTML file with no CDN calls, no analytics, no JavaScript imports.

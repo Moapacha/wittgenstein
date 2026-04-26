@@ -1,5 +1,19 @@
 # Extending Wittgenstein
 
+> **Status:** mixed-surface reference. This page still contains useful extension recipes,
+> especially for `polyglot-mini` and older v0.1-era codec patterns, but it is **not**
+> the canonical execution brief for the current Codec v2 migration.
+>
+> For active v0.2 work, start with:
+>
+> - `AGENTS.md`
+> - `docs/exec-plans/active/codec-v2-port.md`
+> - `docs/agent-guides/`
+> - `docs/archive-policy.md` when deciding whether to refresh, archive, or retire an older surface
+>
+> Keep this page for reusable extension patterns and legacy recipes; do not treat every
+> example below as the current shipping shape.
+
 Wittgenstein has two surfaces that share one architecture:
 
 - **TypeScript monorepo** (`packages/*`) — production harness with typed contracts,
