@@ -29,15 +29,15 @@ land as confirmations, not discoveries.
 
 ## Phase ordering (overview)
 
-| Phase | Work                                                                                                                                                                                                                                                                                   | Gate                                                                                                                                                        |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| M0    | Introduce `Codec<Req, Art>`, `IR`, `Route`, `HarnessCtx` types in `packages/schemas` behind an `@experimental` tag. No call-site change.                                                                                                                                               | Types land; `pnpm typecheck` green.                                                                                                                         |
-| M1    | Port `codec-image` (svg, ascii-png, raster) first — only modality with both L4 adapter slot and non-trivial L5, so it stresses the protocol hardest. Default pipeline stays one LLM round (schema-in-preamble). `--expand` flag opts into a round-1 expansion pass for A/B comparison. | Goldens preserve; manifest rows codec-authored; round-trip test ≤20 lines; Brief A's "LFQ-family discrete-token decoder" rename lands in ADR-0005 addendum. |
-| M2    | Port `codec-audio` (speech, soundscape, music) — eliminates the 80-line route copy-paste.                                                                                                                                                                                              | Goldens preserve; `AudioRequest.route` deprecated with warning.                                                                                             |
-| M3    | Port `codec-sensor` (ecg, gyro, temperature) — confirmation case (no L4), closes the modality sweep.                                                                                                                                                                                   | Goldens preserve; `SensorRequest` surface unchanged from user side.                                                                                         |
-| M4    | Retire `harness.ts:123-172` modality branching + `:139-172` manifest overrides. Remove `AudioRequest.route`, `SvgRequest.source`, `AsciipngRequest.source`, `VideoRequest.inlineSvgs`.                                                                                                 | Harness is modality-blind; `codec-video` (🔴 stub) awaits its own M-slot.                                                                                   |
-| M5a   | Land image benchmark bridge first (Brief E): VQAScore + CLIPScore fallback, wired into the default tier only.                                                                                                                                                                          | Image metric runs locally; `quality_partial` invariant enforced.                                                                                            |
-| M5b   | Land audio + sensor + video benchmark bridge next: UTMOS+WER / librosa / LAION-CLAP / NeuroKit2 / rule lists / clip-frame-drift, still default tier only.                                                                                                                              | Non-image metrics wired after M1–M4 are stable.                                                                                                             |
+| Phase | Work                                                                                                                                                                                                                                                                                                                                                                       | Gate                                                                                                                                                        |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M0    | Introduce `Codec<Req, Art>`, `IR`, `Route`, `HarnessCtx` types in `packages/schemas` behind an `@experimental` tag. No call-site change.                                                                                                                                                                                                                                   | Types land; `pnpm typecheck` green.                                                                                                                         |
+| M1    | Port `codec-image` (raster) first — only modality with both L4 adapter slot and non-trivial L5, so it stresses the protocol hardest. `codec-svg` and `codec-asciipng` are tracked as sibling follow-up ports, not internal image routes. Default pipeline stays one LLM round (schema-in-preamble). `--expand` flag opts into a round-1 expansion pass for A/B comparison. | Goldens preserve; manifest rows codec-authored; round-trip test ≤20 lines; Brief A's "LFQ-family discrete-token decoder" rename lands in ADR-0005 addendum. |
+| M2    | Port `codec-audio` (speech, soundscape, music) — eliminates the 80-line route copy-paste.                                                                                                                                                                                                                                                                                  | Goldens preserve; `AudioRequest.route` deprecated with warning.                                                                                             |
+| M3    | Port `codec-sensor` (ecg, gyro, temperature) — confirmation case (no L4), closes the modality sweep.                                                                                                                                                                                                                                                                       | Goldens preserve; `SensorRequest` surface unchanged from user side.                                                                                         |
+| M4    | Retire `harness.ts:123-172` modality branching + `:139-172` manifest overrides. Remove `AudioRequest.route`, `SvgRequest.source`, `AsciipngRequest.source`, `VideoRequest.inlineSvgs`.                                                                                                                                                                                     | Harness is modality-blind; `codec-video` (🔴 stub) awaits its own M-slot.                                                                                   |
+| M5a   | Land image benchmark bridge first (Brief E): VQAScore + CLIPScore fallback, wired into the default tier only.                                                                                                                                                                                                                                                              | Image metric runs locally; `quality_partial` invariant enforced.                                                                                            |
+| M5b   | Land audio + sensor + video benchmark bridge next: UTMOS+WER / librosa / LAION-CLAP / NeuroKit2 / rule lists / clip-frame-drift, still default tier only.                                                                                                                                                                                                                  | Non-image metrics wired after M1–M4 are stable.                                                                                                             |
 
 Kill date for pre-v2 surface: **v0.3.0**. Post v0.3.0 the old interfaces are compile
 errors, not deprecation warnings.
@@ -135,7 +135,8 @@ modalities.
 ### M1 — Port `codec-image`
 
 This is the pressure test. Image is the only codec with a non-trivial L4 adapter and a
-non-trivial L5 packaging step, plus three internal routes (svg, ascii-png, raster).
+non-trivial L5 packaging step. In the current repo, `codec-image` is the raster path;
+`codec-svg` and `codec-asciipng` are sibling packages and follow as separate ports.
 
 > **M1 splits into M1A (this row, protocol port) and M1B (L4 adapter training, separate
 > plan).** M1A executes the protocol port + landings the eight Brief H engineering
@@ -165,13 +166,14 @@ non-trivial L5 packaging step, plus three internal routes (svg, ascii-png, raste
 - `packages/core/src/codecs/image.ts` — thin shim that hands off to `ImageCodec`.
   Modality branching for image is removed from `harness.ts` — image now flows through
   the generic dispatch path.
-- `packages/core/src/runtime/harness.ts:123-172` — image branch deleted; svg + ascii-png
-  - asciipng-minimax routes still branch in M1 (they're audio's territory in M2 sense
-    but image has internal routes too — those move into `ImageCodec.route()`).
+- `packages/core/src/runtime/harness.ts:123-172` — image branch deleted. `codec-svg` and
+  `codec-asciipng` keep their existing dispatch until their sibling ports land; they are
+  not re-routed through `codec-image`.
 
-**Route-internal logic:** `ImageRequest.source` (`"raster" | "svg" | "asciipng"`) becomes
-a codec-internal `route` decision computed inside `ImageCodec.route(req)`. The request
-schema's `source` field enters soft-warn deprecation.
+**Route logic:** `codec-image` exposes a single raster route at v0.2. Route selection
+still matters at the protocol level, but for image the `Route<Req>[]` shape currently
+contains one matching route. `codec-svg` and `codec-asciipng` keep their own package-level
+request and route logic until their follow-up ports land.
 
 **Goldens:**
 
@@ -181,9 +183,9 @@ schema's `source` field enters soft-warn deprecation.
 
 **Migration tests:**
 
-- `packages/codec-image/test/round-trip.test.ts` — for each of {raster, svg, asciipng},
-  build a fake `ImageRequest`, run `codec.produce(req, ctx)`, assert artifact and
-  manifest match the v0.1 baseline within tolerance.
+- `packages/codec-image/test/round-trip.test.ts` — build a fake raster `ImageRequest`,
+  run `codec.produce(req, ctx)`, assert artifact and manifest match the v0.1 baseline
+  within tolerance.
 - `packages/codec-image/test/expand-flag.test.ts` — with `{ rounds: 2 }`, the second
   round runs and the manifest records both LLM calls.
 - `packages/core/test/harness-modality-blind.test.ts` — assert the harness no longer
@@ -194,17 +196,17 @@ schema's `source` field enters soft-warn deprecation.
 
 - If goldens drift in any direction the LLM stage cannot explain, revert the PR. The
   decoder is deterministic; drift means a real bug.
-- If the round-trip test for any of the three internal routes spills past 20 lines, the
-  protocol shape is wrong — revert and reopen RFC-0001.
+- If the raster round-trip test spills past 20 lines, the protocol shape is wrong —
+  revert and reopen RFC-0001.
 - If `pnpm test:goldens` shows a CLIPScore regression >10% on the curated tiles
   (Brief E threshold), revert and open a follow-up RFC.
 
 **Gate:**
 
-- Goldens preserve (byte-for-byte for svg writer + ascii-png; structural + manifest for
-  raster).
+- Goldens preserve for raster (structural + manifest for live-LLM runs; byte-for-byte on
+  cached-LLM replay where applicable).
 - Manifest rows codec-authored (greppable: no `manifest.image.*` writes in `core/`).
-- Round-trip test ≤20 lines per route.
+- Raster round-trip test ≤20 lines.
 - Brief A's "LFQ-family discrete-token decoder" rename lands in ADR-0005 addendum
   (separate doc PR; can ship in same train).
 
