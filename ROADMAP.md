@@ -1,5 +1,15 @@
 # Roadmap
 
+> **Status:** high-level release / product roadmap. For the active execution order and
+> migration gates, use `docs/exec-plans/active/codec-v2-port.md`.
+>
+> As of 2026-04-26:
+>
+> - `M0` is landed
+> - `M1A` is landed (`PR #68`)
+> - `M2 audio` is the next execution line
+> - `M1B image depth` is tracked separately as a follow-up line (`Issue #70`)
+
 Wittgenstein is built in phases. Each phase is self-contained and shippable — the repo
 should be useful (and honest) at every phase boundary, not only at the end.
 
@@ -19,9 +29,16 @@ The scaffold and the Python proving ground.
 - CI (lint, typecheck, test) green on push and PR
 - Research notes, benchmark standards, implementation status, quickstart
 
-## Phase 1 — Image neural codec real 🚧 (next)
+## Phase 1 — Image neural codec real 🚧 (in progress)
 
-Move the image path from "harness wired with placeholder latents" to "real VQ decoder in".
+Move the image path from "protocol port landed" to "real frozen decoder + trained adapter in".
+
+Already landed:
+
+- Codec v2 protocol port for raster image (`M1A`)
+- codec-owned packaging + manifest rows
+- image branch removed from the harness
+- single-route raster `ImageCodec extends BaseCodec<...>`
 
 - [ ] Wire a frozen pretrained VQ decoder (LlamaGen or TiTok candidate)
 - [ ] Train the scene-to-latent adapter on a caption subset (CC12M or LAION-COCO slice)
@@ -29,9 +46,18 @@ Move the image path from "harness wired with placeholder latents" to "real VQ de
 - [ ] First golden fixture in `fixtures/golden/image/`
 - [ ] Adapter training recipe documented in `packages/codec-image/src/training/README.md`
 
-## Phase 2 — Audio quality upgrade
+## Phase 2 — Audio codec v2 + quality upgrade
 
-Move audio from "macOS `say` + procedural ambient" to "local neural TTS".
+Move audio from the legacy surface to the Codec v2 shape, then improve quality on top of that.
+
+First:
+
+- [ ] Port `codec-audio` to Codec v2 (`M2`)
+- [ ] Collapse duplicated route logic
+- [ ] Soft-deprecate `AudioRequest.route`
+- [ ] Move manifest authorship fully into the codec
+
+Then:
 
 - [ ] Integrate Coqui XTTS or Piper as local TTS engine (cross-platform)
 - [ ] Keep `say` fallback for zero-setup demos

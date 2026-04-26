@@ -8,6 +8,7 @@ Read these two files before any task:
 
 - [`.claude/AGENT_PROMPT.md`](../.claude/AGENT_PROMPT.md) — orientation (what the project is, how to find information, exact working discipline)
 - [`engineering-discipline.md`](engineering-discipline.md) — working standards (code style, robustness, testing, reporting, constraints)
+- [`archive-policy.md`](archive-policy.md) — how to decide delete vs archive vs refresh vs reclassify when old files drift
 
 ## Then understand the thesis and governance
 

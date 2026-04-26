@@ -232,6 +232,7 @@ cannot offer this; frozen VQ decoding does. See [`docs/reproducibility.md`](docs
 ### For maintainers and contributing agents
 
 - [`docs/engineering-discipline.md`](docs/engineering-discipline.md) — the sharp working standard for how to inspect, change, validate, and report in this repo
+- [`docs/archive-policy.md`](docs/archive-policy.md) — how this repo decides delete vs archive vs refresh when old surfaces drift
 - [`docs/exec-plans/active/codec-v2-port.md`](docs/exec-plans/active/codec-v2-port.md) — the live P6 plan (M0 → M5b) for porting all codecs to Codec Protocol v2
 - [`docs/agent-guides/README.md`](docs/agent-guides/README.md) — index of prompt-ready execution briefs
 - [`docs/agent-guides/image-to-audio-port.md`](docs/agent-guides/image-to-audio-port.md) — cross-line context (M0–M2)
@@ -302,8 +303,7 @@ latents and is waiting on a frozen VQ decoder bridge; video is a typed stub.
 
 **What's next.** Doctrine is locked; the active workstream is the Codec Protocol v2 port
 across all modalities, sequenced in [`docs/exec-plans/active/codec-v2-port.md`](docs/exec-plans/active/codec-v2-port.md)
-(M0 image → M1 image refinement → M2 audio → M3 sensor → M4 video stub → M5a/b benchmarks).
-M0 is the first migration target.
+(`M0` and `M1A` are landed; `M2 audio` is next; `M1B image depth` is tracked separately).
 
 Roadmap: [`ROADMAP.md`](ROADMAP.md). Changelog: [`CHANGELOG.md`](CHANGELOG.md).
 Security: [`SECURITY.md`](SECURITY.md).
